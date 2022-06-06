@@ -1,0 +1,14 @@
+spring:
+  config:
+    import: optional:file:.env.pro[.properties]
+  datasource:
+    username: ${MYSQL_USER_NAME}
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:${DATABASE_TYPE}://${MYSQL_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?characterEncoding=UTF8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    schemas: ${DATABASE_NAME}
+    enabled: false
+    encoding: UTF-8
+server:
+  port: 80

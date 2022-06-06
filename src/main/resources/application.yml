@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: florescence-music
+  profiles:
+    active: dev
+  mvc:
+    path match:
+      matching-strategy: ANT_PATH_MATCHER
+server:
+  port: ${SERVER_PORT}
+

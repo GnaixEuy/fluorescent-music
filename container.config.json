@@ -1,0 +1,17 @@
+{
+  "containerPort": 80,
+  "minNum": 0,
+  "maxNum": 5,
+  "cpu": 1,
+  "mem": 2,
+  "policyType": "cpu",
+  "policyThreshold": 50,
+  "envParams": {},
+  "customLogs": "stdout",
+  "dataBaseName":"shopping-system",
+  "executeSQLs":[
+    "CREATE DATABASE IF NOT EXISTS springboot_demo;",
+    "USE springboot_demo;",
+    "CREATE TABLE IF NOT EXISTS `Counters` (`id` int(11) NOT NULL AUTO_INCREMENT, `count` int(11) NOT NULL DEFAULT 1, `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARSET = utf8;"
+  ]
+}
