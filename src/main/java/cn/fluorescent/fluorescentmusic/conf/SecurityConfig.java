@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v3/**")
                 .antMatchers("/doc.html")
                 .antMatchers("/weixin/**")
+                /*开发阶段解锁下方*/
                 .antMatchers("/**");
     }
 

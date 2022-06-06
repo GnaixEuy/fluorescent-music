@@ -1,6 +1,7 @@
 package cn.fluorescent.fluorescentmusic.controller;
 
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
+@Api(tags = {"欢迎开始"})
 @RequestMapping(value = {"/hello"})
 public class HelloController {
 
