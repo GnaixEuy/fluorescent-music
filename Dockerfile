@@ -23,7 +23,6 @@ ENV DATABASE_NAME music
 ENV DATABASE_PORT 3306
 ENV APPLICATION_PORT 80
 ENV DATABASE_TYPE mysql
-ENV APPLICATION_PORT 80
 
 # 安装依赖包，如需其他依赖包，请到alpine依赖包管理(https://pkgs.alpinelinux.org/packages?name=php8*imagick*&branch=v3.13)查找。
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories \

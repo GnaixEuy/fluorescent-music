@@ -1,4 +1,4 @@
-package cn.fluorescent.fluorescentmusic.controller.vo;
+package cn.fluorescent.fluorescentmusic.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

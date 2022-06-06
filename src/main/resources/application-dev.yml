@@ -8,3 +8,6 @@ spring:
   flyway:
     enabled: true
     encoding: UTF-8
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -8,4 +8,10 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 server:
   port: ${SERVER_PORT}
-
+mybatis-plus:
+  mapper-locations: classpath:cn/fluorescent/fluorescentmusic/dao/impl/*.xml
+  type-enums-package: cn.fluorescent.fluorescentmusic.enmu
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    map-underscore-to-camel-case: false
+  type-aliases-package: cn.fluorescent.fluorescentmusic.entity

@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.controller;
 
-import cn.fluorescent.fluorescentmusic.controller.vo.ResponseResult;
+import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
