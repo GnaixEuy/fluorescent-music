@@ -13,5 +13,10 @@ mybatis-plus:
   type-enums-package: cn.fluorescent.fluorescentmusic.enmu
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
   type-aliases-package: cn.fluorescent.fluorescentmusic.entity
+weixin:
+  mp:
+    app:
+      id: ${MP_APP_ID}
+      secret: ${MP_APP_SECRET}

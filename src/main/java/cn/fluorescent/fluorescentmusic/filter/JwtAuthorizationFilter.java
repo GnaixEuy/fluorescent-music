@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.filter;
 
-import cn.fluorescent.fluorescentmusic.conf.SecurityConfig;
+import cn.fluorescent.fluorescentmusic.config.SecurityConfig;
 import cn.fluorescent.fluorescentmusic.entity.User;
 import cn.fluorescent.fluorescentmusic.service.UserService;
 import com.auth0.jwt.JWT;

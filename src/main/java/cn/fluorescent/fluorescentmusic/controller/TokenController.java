@@ -3,6 +3,7 @@ package cn.fluorescent.fluorescentmusic.controller;
 import cn.fluorescent.fluorescentmusic.dto.user.TokenCreateRequest;
 import cn.fluorescent.fluorescentmusic.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -28,6 +29,7 @@ public class TokenController {
     private UserService userService;
 
     @PostMapping(value = {""})
+    @ApiOperation(value = "获取token接口，传入用户名密码",httpMethod = "POST")
     public String create(@RequestBody TokenCreateRequest tokenCreateRequest) {
         return this.userService.createToken(tokenCreateRequest);
     }

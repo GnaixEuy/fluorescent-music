@@ -43,6 +43,7 @@ public class UserController {
 
 
 	@GetMapping(value = {"/all"})
+    @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
 	public ResponseResult< List<UserVo>> list() {
 		return ResponseResult.success( userService.list()
@@ -53,7 +54,7 @@ public class UserController {
 	}
 
     @GetMapping(value = {""})
-    @ApiOperation(value = "用户检索")
+    @ApiOperation(value = "用户分页检索，传入对应的size、total等参数获取需要的用户分页数据")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult< Page<User> > search(Page<User> page) {
         page = this.userService.page(page);
@@ -61,12 +62,14 @@ public class UserController {
     }
 
     @PostMapping(value = {""})
+    @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo",httpMethod = "POST")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo create(@Validated @RequestBody UserCreateRequest userCreateRequest) {
         return this.userMapper.toVo(this.userService.create(userCreateRequest));
     }
 
     @GetMapping(value = {"/{id}"})
+    @ApiOperation(value = "通过id获取UserVo信息",httpMethod = "GET")
     public UserVo get(@PathVariable String id) {
         final UserDto userDto = this.userService.get(id);
         if (userDto == null) {
@@ -80,6 +83,7 @@ public class UserController {
      * 时间自动更新bug 已修复，待全面测试
      */
     @PutMapping(value = {"/{id}"})
+    @ApiOperation(value = "通过id 更新user数据，返回更新后的vo",httpMethod = "PUT")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo update(@PathVariable String id, @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
         final UserDto userDto = this.userService.update(id, userUpdateRequest);
@@ -87,17 +91,17 @@ public class UserController {
     }
 
     @DeleteMapping(value = {"/{id}"})
+            @ApiOperation(value = "通过id，删除user",httpMethod = "DELETE")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     void delete(@PathVariable String id) {
         this.userService.delete(id);
     }
 
     @GetMapping(value = {"/me"})
+    @ApiOperation(value = "通过请求头保存的token，获取当前用户的信息",httpMethod = "GET")
     UserVo me() {
         return this.userMapper.toVo(this.userService.getCurrentUser());
     }
-
-
 
     @Autowired
     public void setUserService(UserService userService) {

@@ -2,6 +2,7 @@ package cn.fluorescent.fluorescentmusic.controller;
 
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @GetMapping(value = {""})
+    @ApiOperation(value = "开始项目，基本通用vo格式")
     public ResponseResult<String> test() {
         return ResponseResult.success("开始项目吧! 祝一切顺利");
     }

@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.service.impl;
 
-import cn.fluorescent.fluorescentmusic.conf.SecurityConfig;
+import cn.fluorescent.fluorescentmusic.config.SecurityConfig;
 import cn.fluorescent.fluorescentmusic.dao.UserDao;
 import cn.fluorescent.fluorescentmusic.dto.user.TokenCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
@@ -17,7 +17,6 @@ import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>

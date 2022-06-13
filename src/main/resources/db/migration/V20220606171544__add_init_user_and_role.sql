@@ -1,10 +1,12 @@
 
-INSERT INTO `user` (id, username, nickname, password, created_time, updated_time)
+INSERT INTO `user` (id, username, nickname, password,gender, created_time, updated_time)
 VALUES ('1', 'admin', 'GnaixEuy', '$2a$10$tLL4xDMkoWZN98GKxueh5uvUzT2jwjXTn7I5uDx95pWzC2PWar5bS',
+        2,
         '2021-07-21 09:27:12.260000',
         '2021-07-21 09:27:12.260000');
-INSERT INTO `user` (id, username, nickname, password, created_time, updated_time)
+INSERT INTO `user` (id, username, nickname, password, gender,created_time, updated_time)
 VALUES ('2', 'admin22', 'cathat-music', '$2a$10$tLL4xDMkoWZN98GKxueh5uvUzT2jwjXTn7I5uDx95pWzC2PWar5bS',
+        1,
         '2021-07-21 09:27:12.260000',
         '2021-07-21 09:27:12.260000');
 INSERT INTO `user` (id, username, nickname, password, created_time, updated_time)

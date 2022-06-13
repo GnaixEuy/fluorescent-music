@@ -6,7 +6,7 @@ CREATE TABLE user
     username        VARCHAR(64)          NOT NULL COMMENT '用户名',
     nickname        VARCHAR(64)          NULL COMMENT '用户昵称',
     password        VARCHAR(64)          NOT NULL COMMENT '加密后的密码',
-    gender          VARCHAR(255)         NULL COMMENT '性别',
+    gender          INTEGER(6)         NULL COMMENT '性别',
     locked          tinyint(1) DEFAULT 0 NOT NULL COMMENT '是否锁定，1-是，0-否',
     enabled         tinyint(1) DEFAULT 1 NOT NULL COMMENT '是否可用，1-是，0-否',
     last_login_ip   VARCHAR(64)          NULL COMMENT '最后登录IP',
