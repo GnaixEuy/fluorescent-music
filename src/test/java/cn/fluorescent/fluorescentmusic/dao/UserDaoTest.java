@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.dao;
 
-import cn.fluorescent.fluorescentmusic.enmu.Gender;
+import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.entity.User;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.junit.jupiter.api.Assertions;

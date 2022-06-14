@@ -1,4 +1,4 @@
-package cn.fluorescent.fluorescentmusic.enmu;
+package cn.fluorescent.fluorescentmusic.enmus;
 
 import lombok.Getter;
 
@@ -27,15 +27,17 @@ public enum ExceptionType {
     USER_PASSWORD_NOT_MATCH(40001003, "用户名或密码错误"),
     USER_NOT_ENABLED(50001001, "用户未启用"),
     USER_LOCKED(50001002, "用户被锁定"),
-    USER_OPEN_ID_NOT_FOUND(40401003, "未找到openId绑定用户"),
-    MUSIC_NOT_FOUND(40402001, "歌曲不存在"),
+    USER_INSERT_ERROR(40001077, "创建用户信息失败"),
+    USER_UPDATE_ERROR(50001040, "用户更新失败"),
+    USER_DELETE_ERROR(50001070, "用户删除失败"),
+    MUSIC_NOT_FOUND(40402002, "音乐信息不存在"),
+    MUSIC_INSERT_ERROR(40002077, "创建音乐信息失败"),
+    MUSIC_UPDATE_ERROR(50002040, "音乐更新失败"),
+    MUSIC_DELETE_ERROR(50002070, "音乐删除失败"),
     FILE_NOT_FOUND(40403001, "文件不存在"),
     FILE_NOT_PERMISSION(40303002, "当前用户无权限修改文件"),
     PLAYLIST_NOT_FOUND(40404001, "歌单不存在"),
-    ARTIST_NOT_FOUND(40405001, "歌手不存在"),
-    ALBUM_NOT_FOUND(40406001, "专辑不存在"),
-    USER_INSERT_ERROR(400010033,"用户创建失败"),
-    USER_UPDATE_ERROR(400010034, "用户更新失败");
+    ARTIST_NOT_FOUND(40405001, "歌手不存在");
 
 
     private final Integer code;

@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.exception;
 
-import cn.fluorescent.fluorescentmusic.enmu.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.hutool.json.JSONUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;

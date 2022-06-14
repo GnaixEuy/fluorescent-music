@@ -1,5 +1,6 @@
 package cn.fluorescent.fluorescentmusic.dao;
 
+import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import cn.fluorescent.fluorescentmusic.entity.Music;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
@@ -30,6 +29,13 @@ class MusicDaoTest {
         List<Music> music = this.musicDao.selectList(null);
         Assertions.assertNotNull(music);
         music.forEach(System.out::println);
+    }
+
+    @Test
+    public void  insert(){
+        Music music = new Music("发如雪","周杰伦-发如雪","1", MusicStatus.DRAFT);
+        int insert = this.musicDao.insert(music);
+        Assertions.assertEquals(1,insert);
     }
 
 }

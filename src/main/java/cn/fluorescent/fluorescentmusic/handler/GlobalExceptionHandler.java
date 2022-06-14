@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.handler;
 
-import cn.fluorescent.fluorescentmusic.enmu.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;

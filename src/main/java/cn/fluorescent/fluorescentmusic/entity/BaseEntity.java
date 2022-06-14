@@ -24,12 +24,21 @@ import java.util.Date;
 @NoArgsConstructor
 public class BaseEntity {
 
+    /**
+     * id
+     */
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
+    /**
+     * 创建时间
+     */
     @TableField(value = "created_time", fill = FieldFill.INSERT)
     private Date createdTime;
 
+    /**
+     * 更新时间
+     */
     @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
     private Date updatedTime;
 

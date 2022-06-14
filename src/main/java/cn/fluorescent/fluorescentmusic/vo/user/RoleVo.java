@@ -1,9 +1,7 @@
-package cn.fluorescent.fluorescentmusic.vo;
+package cn.fluorescent.fluorescentmusic.vo.user;
 
-import cn.fluorescent.fluorescentmusic.enmu.Gender;
+import cn.fluorescent.fluorescentmusic.vo.BaseVo;
 import lombok.*;
-
-import java.util.List;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
@@ -19,18 +17,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVo extends BaseVo {
+public class RoleVo extends BaseVo {
 
-    private String username;
+    private String id;
 
-    private String nickname;
+    private String name;
 
-    private Gender gender;
-
-    private Boolean locked;
-
-    private Boolean enabled;
-
-    private List<RoleVo> roles;
+    private String title;
 }
-

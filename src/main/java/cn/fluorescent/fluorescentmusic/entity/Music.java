@@ -1,10 +1,8 @@
 package cn.fluorescent.fluorescentmusic.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,14 +17,9 @@ import lombok.NoArgsConstructor;
 @TableName(value ="music")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Music implements Serializable {
-    /**
-     * 歌曲ID
-     */
-    @TableId
-    private String id;
+public class Music extends BaseEntity implements Serializable {
 
     /**
      * 歌曲名
@@ -46,16 +39,6 @@ public class Music implements Serializable {
     /**
      * 歌曲上架状态，1-DRAFT-草稿，2-PUBLISHED-已上架，3-CLOSED-已下架
      */
-    private Integer status;
-
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updatedTime;
+    private MusicStatus status;
 
 }

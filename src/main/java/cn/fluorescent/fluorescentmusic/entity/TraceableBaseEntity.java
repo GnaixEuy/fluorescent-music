@@ -1,6 +1,9 @@
-package cn.fluorescent.fluorescentmusic.vo;
+package cn.fluorescent.fluorescentmusic.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
@@ -8,19 +11,17 @@ import lombok.*;
  * <p>项目： fluorescent-music </p>
  *
  * @author GnaixEuy
- * @date 2022/6/6
+ * @date 2022/6/14
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleVo extends BaseVo {
+public class TraceableBaseEntity extends BaseEntity {
 
-    private String id;
+    protected User createdBy;
 
-    private String name;
+    protected User updatedBy;
 
-    private String title;
 }

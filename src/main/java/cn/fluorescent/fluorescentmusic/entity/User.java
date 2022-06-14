@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.entity;
 
-import cn.fluorescent.fluorescentmusic.enmu.Gender;
+import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;

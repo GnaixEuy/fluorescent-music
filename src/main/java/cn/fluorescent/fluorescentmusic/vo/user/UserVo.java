@@ -1,9 +1,9 @@
-package cn.fluorescent.fluorescentmusic.dto.user;
+package cn.fluorescent.fluorescentmusic.vo.user;
 
 import cn.fluorescent.fluorescentmusic.enmus.Gender;
-import lombok.Data;
+import cn.fluorescent.fluorescentmusic.vo.BaseVo;
+import lombok.*;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,16 +15,16 @@ import java.util.List;
  * @date 2022/6/6
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserDto {
-
-    private String id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserVo extends BaseVo {
 
     private String username;
 
     private String nickname;
-
-    private List <RoleDto> roles;
 
     private Gender gender;
 
@@ -32,7 +32,6 @@ public class UserDto {
 
     private Boolean enabled;
 
-    private String lastLoginIp;
-
-    private Date lastLoginTime;
+    private List<RoleVo> roles;
 }
+

@@ -114,6 +114,17 @@
             <artifactId>weixin-java-mp</artifactId>
             <version>4.3.5.B</version>
         </dependency>
+        <!--cos文件上传-->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.89</version>
+        </dependency>
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos-sts_api</artifactId>
+            <version>3.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>

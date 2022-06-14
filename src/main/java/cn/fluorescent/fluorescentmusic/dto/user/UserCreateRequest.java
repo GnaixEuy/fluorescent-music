@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.dto.user;
 
-import cn.fluorescent.fluorescentmusic.enmu.Gender;
+import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

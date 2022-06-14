@@ -20,3 +20,9 @@ weixin:
     app:
       id: ${MP_APP_ID}
       secret: ${MP_APP_SECRET}
+tencent:
+  cos:
+    bucket: ${COS_BUCKET}
+    region: ${COS_REGION}
+    secret-id: ${COS_SECRET_ID}
+    secret-key: ${COS_SECRET_KEY}

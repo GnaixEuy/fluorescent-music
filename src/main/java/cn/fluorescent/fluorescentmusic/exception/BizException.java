@@ -1,6 +1,6 @@
 package cn.fluorescent.fluorescentmusic.exception;
 
-import cn.fluorescent.fluorescentmusic.enmu.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>

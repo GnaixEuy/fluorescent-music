@@ -1,4 +1,4 @@
-package cn.fluorescent.fluorescentmusic.enmu;
+package cn.fluorescent.fluorescentmusic.enmus;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -12,25 +12,26 @@ import lombok.NoArgsConstructor;
  * <p>项目： fluorescent-music </p>
  *
  * @author GnaixEuy
- * @date 2022/6/6
+ * @date 2022/6/14
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-public enum Gender {
+@NoArgsConstructor
+@AllArgsConstructor
+public enum FileType {
     /**
-     * 数据库-显示: 1-女, 2-男, 3-未知
+     * 用于分辨文件类型的枚举值
      */
-    FEMALE(1, "女"),
-    MALE(2, "男"),
-    UNKNOWN(3, "未知");
+    OTHER(0, "其他"),
+    AUDIO(1, "音频"),
+    IMAGE(2, "图像"),
+    VIDEO(3, "视频");
+
 
     @EnumValue
     private Integer key;
 
     @JsonValue
     private String display;
-
 }
 

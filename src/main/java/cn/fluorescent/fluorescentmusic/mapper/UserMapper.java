@@ -3,7 +3,7 @@ package cn.fluorescent.fluorescentmusic.mapper;
 import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
 import cn.fluorescent.fluorescentmusic.entity.User;
-import cn.fluorescent.fluorescentmusic.vo.UserVo;
+import cn.fluorescent.fluorescentmusic.vo.user.UserVo;
 import org.mapstruct.Mapper;
 
 /**
