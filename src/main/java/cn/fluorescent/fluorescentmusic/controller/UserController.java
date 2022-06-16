@@ -43,7 +43,7 @@ public class UserController {
 
 	@GetMapping(value = {"/all"})
     @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
-    //    @RolesAllowed(value = {"ROLE_ADMIN"})
+//        @RolesAllowed(value = {"ROLE_ADMIN"})
 	public ResponseResult< List<UserVo>> list() {
 		return ResponseResult.success( userService.list()
 				.stream()

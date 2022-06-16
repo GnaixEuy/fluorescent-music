@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -68,6 +71,24 @@ public class MusicServiceImpl extends ServiceImpl<MusicDao, Music> implements Mu
     @Override
     public void close(String id) {
         this.changeStatus(id, MusicStatus.CLOSED);
+    }
+
+    /**
+     * 查询歌名时给予歌名提示
+     *
+     * @param name 模糊字段
+     * @return 歌名集合
+     */
+    @Override
+    public List<String> nameSearchTip(String name) {
+        List<Music> music = this.musicDao.selectList(Wrappers.<Music>lambdaQuery()
+                .select(Music::getName)
+                .like(Music::getName, name));
+        List<String> list = new ArrayList<>(music.size());
+        for (Music musicName : music) {
+            list.add(musicName.getName());
+        }
+        return list;
     }
 
     private void changeStatus(String id, MusicStatus musicStatus) {

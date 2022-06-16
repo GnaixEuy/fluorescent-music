@@ -1,5 +1,6 @@
 package cn.fluorescent.fluorescentmusic.dto.music;
 
+import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,7 @@ public class MusicUpdateRequest {
     private String name;
 
     private String description;
+
+    private MusicStatus musicStatus;
+
 }

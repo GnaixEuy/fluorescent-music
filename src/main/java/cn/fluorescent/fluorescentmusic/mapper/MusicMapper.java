@@ -23,6 +23,8 @@ public interface MusicMapper extends MapperInterface<Music, MusicDto> {
 
     MusicDto toDto(MusicUpdateRequest musicUpdateRequest);
 
+    Music toEntity(MusicCreateRequest musicCreateRequest);
+
     MusicVo toVo(MusicDto musicDto);
 
 }

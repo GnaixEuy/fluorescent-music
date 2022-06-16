@@ -18,13 +18,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-// TODO 待探究
 public enum Storage {
     /**
      *
      */
-    OSS(1, "OSS"),
-    COS(2, "COS");
+    OSS(2, "OSS"),
+    COS(1, "COS");
 
     @EnumValue
     private Integer key;

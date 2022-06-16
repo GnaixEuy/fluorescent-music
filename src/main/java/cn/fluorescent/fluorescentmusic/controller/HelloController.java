@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = {"/hello"})
 public class HelloController {
 
-
     @GetMapping(value = {""})
     @ApiOperation(value = "开始项目，基本通用vo格式")
     public ResponseResult<String> test() {

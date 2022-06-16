@@ -2,12 +2,12 @@ package cn.fluorescent.fluorescentmusic.entity;
 
 import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * 歌曲表
@@ -30,6 +30,11 @@ public class Music extends BaseEntity implements Serializable {
      * 歌曲简介
      */
     private String description;
+
+    /**
+     * 歌曲图片
+     */
+    private String imageUrl;
 
     /**
      * 音乐文件ID

@@ -22,11 +22,13 @@ public class MusicVo extends BaseVo {
 
     private String name;
 
+    private String imageUrl;
+
     private MusicStatus status;
 
     private String description;
 
-    private FileVo file;
+    private FileVo musicFile;
 
 }
 

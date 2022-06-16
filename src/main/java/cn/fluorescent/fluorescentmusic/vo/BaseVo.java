@@ -23,10 +23,10 @@ public abstract class BaseVo {
 
     private String id;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyyMMddHHmmss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd-HH:mm:ss")
     private Date createdTime;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyyMMddHHmmss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd-HH:mm:ss")
     private Date updatedTime;
 
 }

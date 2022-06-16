@@ -1,6 +1,5 @@
 package cn.fluorescent.fluorescentmusic.dto.music;
 
-import cn.fluorescent.fluorescentmusic.dto.file.FileDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +25,8 @@ public class MusicCreateRequest {
 
     private String description;
 
-    private FileDto file;
+    private String imageUrl;
+
+    private String fileId;
 
 }
