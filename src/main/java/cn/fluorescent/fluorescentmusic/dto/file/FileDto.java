@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -39,6 +37,8 @@ public class FileDto extends BaseDto {
     private FileType type;
 
     private Storage storage;
+
+    private FileStatus status;
 
     private FileStatus fileStatus;
 

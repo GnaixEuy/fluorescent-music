@@ -17,22 +17,25 @@ import org.springframework.context.annotation.Configuration;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @Configuration
+
 public class  WeChatConfig {
 
     @Value(value = "${weixin.mp.app.id}")
-    private String appId;
+    private String id;
 
     @Value(value = "${weixin.mp.app.secret}")
-    private String appSecret;
+    private String secret;
 
     @Bean
     public WxMpService wxMpService() {
         final WxMpService wxMpService = new WxMpServiceImpl();
         final WxMpDefaultConfigImpl wxMpDefaultConfig = new WxMpDefaultConfigImpl();
-        wxMpDefaultConfig.setAppId(this.appId);
-        wxMpDefaultConfig.setSecret(this.appSecret);
+        wxMpDefaultConfig.setAppId(this.id);
+        wxMpDefaultConfig.setSecret(this.secret);
         wxMpService.setWxMpConfigStorage(wxMpDefaultConfig);
         return wxMpService;
     }
+
+
 
 }

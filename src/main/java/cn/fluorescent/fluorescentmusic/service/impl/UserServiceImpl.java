@@ -17,19 +17,16 @@ import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
@@ -43,14 +40,22 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Lazy, @Autowired})
-public class UserServiceImpl extends ServiceImpl<UserDao,User> implements UserService {
+public class UserServiceImpl extends BaseService implements UserService {
 
-    private final UserMapper userMapper;
-    private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
+    private UserDao userDao;
+    private PasswordEncoder passwordEncoder;
 
-
+    @Override
+    public Page<UserDto> search(Page page) {
+        page = this.userDao.selectPage(page, Wrappers.<User>lambdaQuery().orderByAsc(User::getCreatedTime));
+        final List<UserDto> userDtoList = ((List<User>) page.getRecords())
+                .stream()
+                .map(this.userMapper::toDto)
+                .collect(Collectors.toList());
+        page.setRecords(userDtoList);
+        return page;
+    }
 
     @Override
     public UserDto create(UserCreateRequest userCreateRequest) {
@@ -122,12 +127,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao,User> implements UserSe
 
     @Override
     public User loadUserByUsername(String username) {
-        final User user = this.userDao.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, username));
-        if (user == null) {
-            throw new BizException(ExceptionType.USER_NOT_FOUND);
-        } else {
-            return user;
-        }
+        return super.loadUserByUsername(username);
     }
 
     @Override
@@ -155,7 +155,27 @@ public class UserServiceImpl extends ServiceImpl<UserDao,User> implements UserSe
 
     @Override
     public UserDto getCurrentUser() {
-        return this.userMapper.toDto(this.getCurrentUserEntity());
+        return this.userMapper.toDto(super.getCurrentUserEntity());
+    }
+
+    @Override
+    public List<UserDto> list() {
+        List<User> users = this.userDao.selectList(null);
+        return users.stream()
+                .map(this.userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param page
+     * @return
+     */
+    @Override
+    public Page<UserDto> page(Page page) {
+        Page retPage = this.userDao.selectPage(page, null);
+        List<User> records = retPage.getRecords();
+        List<UserDto> collect = records.stream().map(this.userMapper::toDto).collect(Collectors.toList());
+        return retPage.setRecords(collect);
     }
 
     private User getById(String id) {
@@ -166,13 +186,19 @@ public class UserServiceImpl extends ServiceImpl<UserDao,User> implements UserSe
         return user;
     }
 
-    protected User getCurrentUserEntity() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // todo
-        return loadUserByUsername(authentication.getName());
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 
-}
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+}
 
