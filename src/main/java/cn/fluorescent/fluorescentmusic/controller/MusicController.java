@@ -16,12 +16,14 @@ import cn.fluorescent.fluorescentmusic.vo.file.FileVo;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class MusicController {
     @PostMapping(value = {""})
     @ApiOperation(value = "增加音乐接口")
     @Transactional
-    public ResponseResult<MusicVo> insert(@RequestBody MusicCreateRequest musicCreateRequest) {
+    public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
         boolean result = this.musicService.save(music);
         if (!result || ObjectUtil.isAllEmpty(music)) {
@@ -91,8 +93,19 @@ public class MusicController {
     @ApiOperation(value = "获取所有音乐接口")
     public ResponseResult<List<MusicVo>> list() {
         List<Music> list = this.musicService.list();
-        return musicList2MusicVoList(list);
+        return ResponseResult.success(musicList2MusicVoList(list));
     }
+
+    @GetMapping("/search")
+    @ApiOperation(value = "音乐分页接口，按照需要的数量获取定量音乐数据")
+    public ResponseResult<Page<MusicVo>> search(@RequestBody(required = false) Page searchFilter) {
+        Page page = this.musicService.page(searchFilter);
+        List records = page.getRecords();
+        List<MusicVo> musicVos = this.musicList2MusicVoList(records);
+        page.setRecords(musicVos);
+        return ResponseResult.success(page);
+    }
+
 
     @GetMapping(value = {"/nameTip/{name}"})
     @ApiOperation(value = "搜索歌曲时返回名称提示")
@@ -104,11 +117,12 @@ public class MusicController {
     @ApiOperation(value = "根据音乐名来获取音乐信息")
     public ResponseResult<List<MusicVo>> getByName(@PathVariable String name) {
         List<Music> list = this.musicService.list(Wrappers.<Music>lambdaQuery().eq(Music::getName, name));
-        return musicList2MusicVoList(list);
+        return ResponseResult.success(musicList2MusicVoList(list));
     }
 
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id删除对应音乐")
+    //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<String> delete(@PathVariable String id) {
         boolean b = this.musicService.removeById(id);
         if (!b) {
@@ -119,7 +133,8 @@ public class MusicController {
 
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id修改音乐信息状态等")
-    public ResponseResult<String> update(@RequestBody MusicUpdateRequest musicUpdateRequest, @PathVariable String id) {
+    //    @RolesAllowed(value = {"ROLE_ADMIN"})
+    public ResponseResult<String> update(@Validated @RequestBody MusicUpdateRequest musicUpdateRequest, @PathVariable String id) {
         System.out.println(musicUpdateRequest);
         Music byId = this.musicService.getById(id);
         if (ObjectUtil.isNull(byId)) {
@@ -157,7 +172,7 @@ public class MusicController {
     }
 
     @NotNull
-    private ResponseResult<List<MusicVo>> musicList2MusicVoList(List<Music> list) {
+    private List<MusicVo> musicList2MusicVoList(List<Music> list) {
         List<MusicVo> resultList = new ArrayList<>(list.size());
         MusicVo musicVo;
         File byId;
@@ -170,7 +185,7 @@ public class MusicController {
             resultList.add(musicVo);
         }
         list.clear();
-        return ResponseResult.success(resultList);
+        return resultList;
     }
 
 
