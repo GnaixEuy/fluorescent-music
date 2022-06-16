@@ -33,4 +33,7 @@ public class ResponseResult<T> {
         return new ResponseResult<>(503, message, null);
     }
 
+    public static ResponseResult createInstance() {
+        return new ResponseResult();
+    }
 }

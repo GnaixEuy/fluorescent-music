@@ -4,7 +4,6 @@ import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicDto;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
 import cn.fluorescent.fluorescentmusic.entity.Music;
-import cn.fluorescent.fluorescentmusic.mapper.file.FileMapper;
 import cn.fluorescent.fluorescentmusic.vo.MusicVo;
 import org.mapstruct.Mapper;
 
@@ -17,7 +16,7 @@ import org.mapstruct.Mapper;
  * @date 2022/6/14
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
-@Mapper(componentModel = "spring", uses = FileMapper.class)
+@Mapper(componentModel = "spring")
 public interface MusicMapper extends MapperInterface<Music, MusicDto> {
 
     MusicDto toDto(MusicCreateRequest musicCreateRequest);

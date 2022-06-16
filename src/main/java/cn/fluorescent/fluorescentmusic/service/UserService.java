@@ -5,9 +5,10 @@ import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
 import cn.fluorescent.fluorescentmusic.dto.user.UserUpdateRequest;
 import cn.fluorescent.fluorescentmusic.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
@@ -18,9 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @date 2022/6/6
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
-public interface UserService extends UserDetailsService, IService<User> {
-    UserDto create(UserCreateRequest userCreateRequest);
+public interface UserService extends UserDetailsService {
 
+    UserDto create(UserCreateRequest userCreateRequest);
 
     @Override
     User loadUserByUsername(String username);
@@ -31,7 +32,13 @@ public interface UserService extends UserDetailsService, IService<User> {
 
     void delete(String id);
 
+    Page<UserDto> search(Page pageable);
+
     String createToken(TokenCreateRequest tokenCreateRequest);
 
     UserDto getCurrentUser();
+
+    List<UserDto> list();
+
+    Page<UserDto> page(Page page);
 }

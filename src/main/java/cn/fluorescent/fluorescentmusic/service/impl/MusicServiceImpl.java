@@ -12,10 +12,8 @@ import cn.fluorescent.fluorescentmusic.mapper.MusicMapper;
 import cn.fluorescent.fluorescentmusic.service.MusicService;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,11 +27,10 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Lazy, @Autowired})
 public class MusicServiceImpl extends ServiceImpl<MusicDao, Music> implements MusicService {
 
-    private final MusicDao musicDao;
-    private final MusicMapper musicMapper;
+    private MusicDao musicDao;
+    private MusicMapper musicMapper;
 
     @Override
     public MusicDto create(MusicCreateRequest musicCreateRequest) {
@@ -89,5 +86,15 @@ public class MusicServiceImpl extends ServiceImpl<MusicDao, Music> implements Mu
             throw new BizException(ExceptionType.MUSIC_NOT_FOUND);
         }
         return music;
+    }
+
+    @Autowired
+    public void setMusicDao(MusicDao musicDao) {
+        this.musicDao = musicDao;
+    }
+
+    @Autowired
+    public void setMusicMapper(MusicMapper musicMapper) {
+        this.musicMapper = musicMapper;
     }
 }

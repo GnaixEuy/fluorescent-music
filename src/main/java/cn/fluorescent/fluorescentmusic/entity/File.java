@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
+import java.util.Date;
+
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -40,4 +42,15 @@ public class File extends TraceableBaseEntity {
     @TableField(value = "status")
     private FileStatus fileStatus = FileStatus.UPLOADING;
 
+    public Date getCreadedTime() {
+        return super.getCreatedTime();
+    }
+
+    public Date getUpdatedTime() {
+        return super.getUpdatedTime();
+    }
+
+    public String getId() {
+        return super.getId();
+    }
 }

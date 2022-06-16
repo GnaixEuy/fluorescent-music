@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fluorescent.fluorescentmusic.dao.FileDao">
+    <resultMap id="fileResultMap" type="cn.fluorescent.fluorescentmusic.entity.File">
+        <id column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="name" property="name"/>
+        <result column="file_key" property="key"/>
+        <result column="ext" property="ext"/>
+        <result column="size" property="size"/>
+        <result column="type" property="type"/>
+        <result column="storage" property="storage"/>
+        <result column="status" property="fileStatus"/>
+        <collection column="created_by_user_id" select="findCreatedBy" property="createdBy"
+                    javaType="cn.fluorescent.fluorescentmusic.entity.User"/>
+        <collection column="updated_by_user_id" select="findUpdatedBy" property="updatedBy"
+                    javaType="cn.fluorescent.fluorescentmusic.entity.User"/>
+    </resultMap>
+
+    <select id="findCreatedBy" resultMap="cn.fluorescent.fluorescentmusic.dao.UserDao.userResultMap">
+        select *
+        FROM user
+        WHERE id = #{created_by_user_id};
+    </select>
+    <select id="findUpdatedBy" resultMap="cn.fluorescent.fluorescentmusic.dao.UserDao.userResultMap">
+        select *
+        FROM user
+        WHERE id = #{updated_by_user_id};
+    </select>
+
+    <insert id="insertWithCreatedByAndUpdatedBy" parameterType="cn.fluorescent.fluorescentmusic.entity.File">
+        insert into file (id, name, file_key, ext, size, type, storage, status, created_time, updated_time,
+                          created_by_user_id, updated_by_user_id)
+        VALUES (#{id}, #{name}, #{key}, #{ext}, #{size}, #{type}, 1, 1, #{creadedTime}, #{updatedTime},
+                #{createdBy.id}, #{updatedBy.id})
+    </insert>
+
+</mapper>

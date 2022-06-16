@@ -35,6 +35,9 @@ public enum ExceptionType {
     MUSIC_UPDATE_ERROR(50002040, "音乐更新失败"),
     MUSIC_DELETE_ERROR(50002070, "音乐删除失败"),
     FILE_NOT_FOUND(40403001, "文件不存在"),
+    FILE_UPLOAD_ERROR(40403002, "文件上传失败"),
+    FILE_EMPTY(40403003, "文件为空"),
+
     FILE_NOT_PERMISSION(40303002, "当前用户无权限修改文件"),
     PLAYLIST_NOT_FOUND(40404001, "歌单不存在"),
     ARTIST_NOT_FOUND(40405001, "歌手不存在");

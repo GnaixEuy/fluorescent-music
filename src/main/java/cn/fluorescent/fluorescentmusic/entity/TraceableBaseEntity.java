@@ -1,5 +1,6 @@
 package cn.fluorescent.fluorescentmusic.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,8 +21,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TraceableBaseEntity extends BaseEntity {
 
+    @TableField(value = "created_by_user_id")
     protected User createdBy;
 
+    @TableField(value = "updated_by_user_id")
     protected User updatedBy;
 
 }
