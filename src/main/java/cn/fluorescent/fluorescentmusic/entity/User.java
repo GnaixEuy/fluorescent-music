@@ -49,6 +49,10 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
     private Date lastLoginTime;
 
+    private String openId;
+
+    private String avatarUrl;
+
     @TableField(exist = false)
     private List<Role> roles;
 
@@ -115,4 +119,11 @@ public class User extends BaseEntity implements UserDetails, Serializable {
         return roles;
     }
 
+    public String getOpenId() {
+        return openId;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
 }

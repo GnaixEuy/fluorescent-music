@@ -2,24 +2,25 @@ package cn.fluorescent.fluorescentmusic.service.impl;
 
 import cn.fluorescent.fluorescentmusic.config.SecurityConfig;
 import cn.fluorescent.fluorescentmusic.dao.UserDao;
-import cn.fluorescent.fluorescentmusic.dto.user.TokenCreateRequest;
-import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
-import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
-import cn.fluorescent.fluorescentmusic.dto.user.UserUpdateRequest;
+import cn.fluorescent.fluorescentmusic.dto.user.*;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.entity.User;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.UserMapper;
 import cn.fluorescent.fluorescentmusic.service.UserService;
+import cn.fluorescent.fluorescentmusic.vo.user.UserVo;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,18 +41,19 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserServiceImpl extends BaseService implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
 
     private UserMapper userMapper;
     private UserDao userDao;
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Page<UserDto> search(Page page) {
+    public Page<UserVo> search(Page page) {
         page = this.userDao.selectPage(page, Wrappers.<User>lambdaQuery().orderByAsc(User::getCreatedTime));
-        final List<UserDto> userDtoList = ((List<User>) page.getRecords())
+        final List<UserVo> userDtoList = ((List<User>) page.getRecords())
                 .stream()
                 .map(this.userMapper::toDto)
+                .map(this.userMapper::toVo)
                 .collect(Collectors.toList());
         page.setRecords(userDtoList);
         return page;
@@ -101,7 +103,13 @@ public class UserServiceImpl extends BaseService implements UserService {
             user.setNickname(nickname);
         }
         if (!StrUtil.isBlank(gender)) {
-            user.setGender(Gender.valueOf(gender));
+            if ("1".equals(gender)) {
+                user.setGender(Gender.FEMALE);
+            } else if ("2".equals(gender)) {
+                user.setGender(Gender.MALE);
+            } else {
+                user.setGender(Gender.UNKNOWN);
+            }
         }
         final boolean success = this.userDao.updateById(user) == 1;
         if (success) {
@@ -125,9 +133,58 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
+    /**
+     * @param openId
+     * @return
+     */
     @Override
-    public User loadUserByUsername(String username) {
-        return super.loadUserByUsername(username);
+    public UserDto loadUserByOpenId(String openId) {
+        User user = this.userDao.selectOne(Wrappers.<User>lambdaQuery().eq(User::getOpenId, openId));
+        return this.userMapper.toDto(user);
+    }
+
+    /**
+     * @param openId
+     * @return
+     */
+    @Override
+    public String createTokenByOpenId(String openId) {
+        User user = this.userDao.selectOne(Wrappers.<User>lambdaQuery().eq(User::getOpenId, openId));
+        if (user == null) {
+            throw new BizException(ExceptionType.USER_NOT_FOUND);
+        }
+        return tokenVerifyAndGenerated(user);
+    }
+
+    /**
+     * @param openId
+     * @param weChatUserCreateRequest
+     * @return
+     */
+    @Override
+    public boolean registeredUserWithOpenId(String openId, WeChatUserCreateRequest weChatUserCreateRequest) {
+        User user = new User();
+        user.setNickname(weChatUserCreateRequest.getNickname());
+        user.setUsername(openId);
+        switch (weChatUserCreateRequest.getGender()) {
+            case 0:
+                user.setGender(Gender.MALE);
+            case 1:
+                user.setGender(Gender.FEMALE);
+            default:
+                user.setGender(Gender.UNKNOWN);
+        }
+        user.setAvatarUrl(weChatUserCreateRequest.getAvatarUrl());
+        user.setOpenId(openId);
+        user.setPassword(openId);
+        user.setLocked(Boolean.FALSE);
+        user.setEnabled(Boolean.TRUE);
+        boolean save = this.save(user);
+        if (save) {
+            return true;
+        }
+        throw new BizException(ExceptionType.USER_INSERT_ERROR);
+
     }
 
     @Override
@@ -141,6 +198,10 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (!passwordEncoder.matches(tokenCreateRequest.getPassword(), user.getPassword())) {
             throw new BizException(ExceptionType.USER_PASSWORD_NOT_MATCH);
         }
+        return tokenVerifyAndGenerated(user);
+    }
+
+    private String tokenVerifyAndGenerated(User user) {
         if (!user.isEnabled()) {
             throw new BizException(ExceptionType.USER_NOT_ENABLED);
         }
@@ -155,15 +216,12 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public UserDto getCurrentUser() {
-        return this.userMapper.toDto(super.getCurrentUserEntity());
+        return this.userMapper.toDto(this.getCurrentUserEntity());
     }
 
     @Override
-    public List<UserDto> list() {
-        List<User> users = this.userDao.selectList(null);
-        return users.stream()
-                .map(this.userMapper::toDto)
-                .collect(Collectors.toList());
+    public List<User> list() {
+        return this.userDao.selectList(null);
     }
 
     /**
@@ -184,6 +242,22 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new BizException(ExceptionType.USER_NOT_FOUND);
         }
         return user;
+    }
+
+    public User getCurrentUserEntity() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // todo
+        return loadUserByUsername(authentication.getName());
+    }
+
+    @Override
+    public User loadUserByUsername(String username) {
+        final User user = this.userDao.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, username));
+        if (user == null) {
+            throw new BizException(ExceptionType.USER_NOT_FOUND);
+        } else {
+            return user;
+        }
     }
 
     @Autowired

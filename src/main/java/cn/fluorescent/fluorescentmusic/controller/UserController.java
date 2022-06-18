@@ -36,39 +36,39 @@ import java.util.stream.Collectors;
 @Api(tags = {"用户"})
 public class UserController {
 
-    private  UserService userService;
+    private UserService userService;
 
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
 
-	@GetMapping(value = {"/all"})
+    @GetMapping(value = {"/all"})
     @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
 //        @RolesAllowed(value = {"ROLE_ADMIN"})
-	public ResponseResult< List<UserVo>> list() {
-		return ResponseResult.success( userService.list()
-				.stream()
-				.map(this.userMapper::toVo)
-				.collect(Collectors.toList()));
-	}
+    public ResponseResult<List<UserVo>> list() {
+        return ResponseResult.success(userService.list()
+                .stream()
+                .map(this.userMapper::toDto)
+                .map(this.userMapper::toVo)
+                .collect(Collectors.toList()));
+    }
 
     @GetMapping(value = {""})
     @ApiOperation(value = "用户分页检索，传入对应的size、total等参数获取需要的用户分页数据")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<Page<UserVo>> search(Page page) {
-        System.out.println(page);
-        page = this.userService.page(page);
-        return ResponseResult.success(page);
+        return ResponseResult.success(this.userService.search(page));
+
     }
 
     @PostMapping(value = {""})
-    @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo",httpMethod = "POST")
+    @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo", httpMethod = "POST")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo create(@Validated @RequestBody UserCreateRequest userCreateRequest) {
         return this.userMapper.toVo(this.userService.create(userCreateRequest));
     }
 
     @GetMapping(value = {"/{id}"})
-    @ApiOperation(value = "通过id获取UserVo信息",httpMethod = "GET")
+    @ApiOperation(value = "通过id获取UserVo信息", httpMethod = "GET")
     public UserVo get(@PathVariable String id) {
         final UserDto userDto = this.userService.get(id);
         if (userDto == null) {
@@ -84,7 +84,7 @@ public class UserController {
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id 更新user数据，返回更新后的vo", httpMethod = "PUT")
     @RolesAllowed(value = {"ROLE_ADMIN"})
-    public UserVo update(@PathVariable String id, @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
+    public UserVo update(@PathVariable String id, @Validated UserUpdateRequest userUpdateRequest) {
         final UserDto userDto = this.userService.update(id, userUpdateRequest);
         return this.userMapper.toVo(userDto);
     }
@@ -97,7 +97,7 @@ public class UserController {
     }
 
     @GetMapping(value = {"/me"})
-    @ApiOperation(value = "通过请求头保存的token，获取当前用户的信息",httpMethod = "GET")
+    @ApiOperation(value = "通过请求头保存的token，获取当前用户的信息", httpMethod = "GET")
     UserVo me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);

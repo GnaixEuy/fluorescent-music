@@ -20,6 +20,10 @@ mybatis-plus:
     map-underscore-to-camel-case: true
   type-aliases-package: cn.fluorescent.fluorescentmusic.entity
 weixin:
+  gzh:
+    app:
+      id: ${GZH_APP_ID}
+      secret: ${GZH_APP_SECRET}
   mp:
     app:
       id: ${MP_APP_ID}

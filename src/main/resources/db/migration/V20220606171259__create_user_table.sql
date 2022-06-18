@@ -1,4 +1,3 @@
-
 CREATE TABLE user
 (
     `id`              VARCHAR(32) NOT NULL
@@ -14,6 +13,7 @@ CREATE TABLE user
     `created_time`    datetime(6) NOT NULL COMMENT '创建时间',
     `updated_time`    datetime(6) NOT NULL COMMENT '更新时间',
     `open_id`         varchar(32) NULL COMMENT 'open_id',
+    `avatar_url`      varchar(256) NULL COMMENT '用户头像',
     CONSTRAINT uk_user_username
         UNIQUE (username)
 ) ENGINE = InnoDB

@@ -86,7 +86,6 @@ public class FileController {
         String fileNameUUID = this.ksuidIdentifierGenerator.nextUUID(multipartFile);
         String filePath = TencentCosConfig.COS_ATTACHMENT + "/" + fileNameUUID + "." + filename[1];
         ResponseResult<HashMap<String, Object>> upload = cosUploadUtil.upload(bucketName, filePath, localFile, originalFilename);
-        System.out.println(filename[1]);
         cn.fluorescent.fluorescentmusic.entity.File file = new cn.fluorescent.fluorescentmusic.entity.File(
                 fileNameUUID,
                 filePath,

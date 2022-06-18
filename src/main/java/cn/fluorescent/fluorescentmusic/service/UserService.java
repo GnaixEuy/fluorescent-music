@@ -1,11 +1,10 @@
 package cn.fluorescent.fluorescentmusic.service;
 
-import cn.fluorescent.fluorescentmusic.dto.user.TokenCreateRequest;
-import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
-import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
-import cn.fluorescent.fluorescentmusic.dto.user.UserUpdateRequest;
+import cn.fluorescent.fluorescentmusic.dto.user.*;
 import cn.fluorescent.fluorescentmusic.entity.User;
+import cn.fluorescent.fluorescentmusic.vo.user.UserVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -19,12 +18,18 @@ import java.util.List;
  * @date 2022/6/6
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
-public interface UserService extends UserDetailsService {
+public interface UserService extends UserDetailsService, IService<User> {
 
     UserDto create(UserCreateRequest userCreateRequest);
 
     @Override
     User loadUserByUsername(String username);
+
+    UserDto loadUserByOpenId(String openId);
+
+    String createTokenByOpenId(String openId);
+
+    boolean registeredUserWithOpenId(String openId, WeChatUserCreateRequest weChatUserCreateRequest);
 
     UserDto get(String id);
 
@@ -32,13 +37,13 @@ public interface UserService extends UserDetailsService {
 
     void delete(String id);
 
-    Page<UserDto> search(Page pageable);
+    Page<UserVo> search(Page pageable);
 
     String createToken(TokenCreateRequest tokenCreateRequest);
 
     UserDto getCurrentUser();
 
-    List<UserDto> list();
+    List<User> list();
 
     Page<UserDto> page(Page page);
 }
