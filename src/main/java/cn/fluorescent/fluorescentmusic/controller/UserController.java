@@ -6,6 +6,7 @@ import cn.fluorescent.fluorescentmusic.dto.user.UserUpdateRequest;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.UserMapper;
+import cn.fluorescent.fluorescentmusic.service.RoleService;
 import cn.fluorescent.fluorescentmusic.service.UserService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import cn.fluorescent.fluorescentmusic.vo.user.UserVo;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private UserService userService;
+    private RoleService roleService;
 
     private UserMapper userMapper;
 
@@ -104,9 +106,22 @@ public class UserController {
         return this.userMapper.toVo(this.userService.getCurrentUser());
     }
 
+    @GetMapping(value = {"/bind/{id}/{title}"})
+    @ApiOperation(value = "传入用户id，和角色姓名进行绑定")
+    public ResponseResult<String> bindRole(@PathVariable String id, @PathVariable String title) {
+        this.userService.bindRole(id, title);
+        return ResponseResult.success("绑定成功");
+    }
+
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @Autowired

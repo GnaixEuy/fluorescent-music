@@ -45,7 +45,7 @@ public class WeChatController {
     private WxMpService wxMpService;
 
     @GetMapping("/auth_url")
-    @ApiOperation(value = "微信一件登录接口，默认网址配置还存在问题，但是可以获取连接，可以对照微信开发文档先看")
+    @ApiOperation(value = "微信扫码登录接口，默认网址配置还存在问题，但是可以获取连接，可以对照微信开发文档先看")
     public String getAuthUrl(@PathParam("redirectUrl") String redirectUrl) {
         return wxMpService.getOAuth2Service().buildAuthorizationUrl(
                 redirectUrl,
@@ -57,7 +57,6 @@ public class WeChatController {
     @PostMapping(value = {"/wxLogin"})
     @ApiOperation(value = "微信登录接口，返回40401002为后端用户不存在，请发送用户信息进行注册")
     public ResponseResult<String> wxLogin(String code, @RequestBody WeChatUserCreateRequest weChatUserCreateRequest) {
-        System.out.println(weChatUserCreateRequest);
         String url = "https://api.weixin.qq.com/sns/jscode2session";
         Map<String, String> param = new HashMap<>();
         param.put("appid", appid);

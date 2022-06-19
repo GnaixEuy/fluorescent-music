@@ -30,6 +30,9 @@ public enum ExceptionType {
     USER_INSERT_ERROR(40001077, "创建用户信息失败"),
     USER_UPDATE_ERROR(50001040, "用户更新失败"),
     USER_DELETE_ERROR(50001070, "用户删除失败"),
+    ROLE_DELETE_ERROR(50001080, "角色信息删除失败"),
+    USER_ROLE_BIND_ERROR(50001081, "用户角色信息绑定失败"),
+
     MUSIC_NOT_FOUND(40402002, "音乐信息不存在"),
     MUSIC_INSERT_ERROR(40002077, "创建音乐信息失败"),
     MUSIC_UPDATE_ERROR(50002040, "音乐更新失败"),

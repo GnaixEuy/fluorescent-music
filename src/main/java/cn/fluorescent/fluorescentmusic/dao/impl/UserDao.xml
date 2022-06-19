@@ -22,10 +22,9 @@
     <select id="findRoles" resultType="cn.fluorescent.fluorescentmusic.entity.Role">
         SELECT *
         FROM role
-        WHERE EXISTS(
-                      SELECT role_id as id
-                      FROM user_role
-                               INNER JOIN `user` ON `user`.id = user_role.user_id AND `user`.id = #{id}
-                  )
+        WHERE role.id IN (SELECT role_id AS id
+                          FROM user_role
+                                   INNER JOIN `user` ON `user`.id = user_role.user_id
+                              AND `user`.id = #{id})
     </select>
 </mapper>

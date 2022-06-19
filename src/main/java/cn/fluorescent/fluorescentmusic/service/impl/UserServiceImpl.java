@@ -1,11 +1,15 @@
 package cn.fluorescent.fluorescentmusic.service.impl;
 
 import cn.fluorescent.fluorescentmusic.config.SecurityConfig;
+import cn.fluorescent.fluorescentmusic.dao.RoleDao;
 import cn.fluorescent.fluorescentmusic.dao.UserDao;
+import cn.fluorescent.fluorescentmusic.dao.UserRoleDao;
 import cn.fluorescent.fluorescentmusic.dto.user.*;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.enmus.Gender;
+import cn.fluorescent.fluorescentmusic.entity.Role;
 import cn.fluorescent.fluorescentmusic.entity.User;
+import cn.fluorescent.fluorescentmusic.entity.UserRole;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.UserMapper;
 import cn.fluorescent.fluorescentmusic.service.UserService;
@@ -44,6 +48,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
 
     private UserMapper userMapper;
+    private RoleDao roleDao;
+
+    private UserRoleDao userRoleDao;
     private UserDao userDao;
     private PasswordEncoder passwordEncoder;
 
@@ -93,12 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (user == null) {
             throw new BizException(ExceptionType.USER_NOT_FOUND);
         }
-        final String username = userUpdateRequest.getUsername();
         final String nickname = userUpdateRequest.getNickname();
         final String gender = userUpdateRequest.getGender();
-        if (!StrUtil.isBlank(username)) {
-            user.setUsername(username);
-        }
         if (!StrUtil.isBlank(nickname)) {
             user.setNickname(nickname);
         }
@@ -110,6 +113,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             } else {
                 user.setGender(Gender.UNKNOWN);
             }
+        }
+        if (userUpdateRequest.getLocked() != null) {
+            user.setLocked(userUpdateRequest.getLocked());
+        }
+        if (userUpdateRequest.getEnabled() != null) {
+            user.setEnabled(userUpdateRequest.getEnabled());
         }
         final boolean success = this.userDao.updateById(user) == 1;
         if (success) {
@@ -189,7 +198,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     @Override
     public UserDto get(String id) {
-        return this.userMapper.toDto(getById(id));
+        return this.userMapper.toDto(this.getById(id));
     }
 
     @Override
@@ -236,6 +245,27 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         return retPage.setRecords(collect);
     }
 
+    /**
+     * 给用户绑定角色信息
+     *
+     * @param id    用户id
+     * @param title 角色名称title
+     * @return
+     */
+    @Override
+    public boolean bindRole(String id, String title) {
+        Role role = this.roleDao.selectOne(Wrappers
+                .<Role>lambdaQuery()
+                .select(Role::getId)
+                .eq(Role::getTitle, title));
+        int insert = this.userRoleDao.insert(new UserRole(id, role.getId()));
+        if (insert != 1) {
+            throw new BizException(ExceptionType.USER_ROLE_BIND_ERROR);
+        }
+        return true;
+
+    }
+
     private User getById(String id) {
         final User user = this.userDao.selectById(id);
         if (user == null) {
@@ -268,6 +298,16 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Autowired
+    public void setRoleDao(RoleDao roleDao) {
+        this.roleDao = roleDao;
+    }
+
+    @Autowired
+    public void setUserRoleDao(UserRoleDao userRoleDao) {
+        this.userRoleDao = userRoleDao;
     }
 
     @Autowired

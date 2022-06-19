@@ -46,4 +46,13 @@ public interface UserService extends UserDetailsService, IService<User> {
     List<User> list();
 
     Page<UserDto> page(Page page);
+
+    /**
+     * 给用户绑定角色信息
+     *
+     * @param id    用户id
+     * @param title 角色名称title
+     * @return
+     */
+    boolean bindRole(String id, String title);
 }
