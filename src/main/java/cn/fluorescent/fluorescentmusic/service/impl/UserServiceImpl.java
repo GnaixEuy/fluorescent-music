@@ -178,8 +178,10 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         switch (weChatUserCreateRequest.getGender()) {
             case 0:
                 user.setGender(Gender.MALE);
+                break;
             case 1:
                 user.setGender(Gender.FEMALE);
+                break;
             default:
                 user.setGender(Gender.UNKNOWN);
         }

@@ -2,7 +2,7 @@ BEGIN;
 INSERT INTO `playlist` (`id`, `name`, `description`, `cover_url`, `status`, `recommended`, `special`,
                         `recommend_factor`, `creator_id`, `created_time`, `updated_time`)
 VALUES ('2ApcWNEFCSCBwQNlgThhGR0tFvL', '测试歌单', '测试歌单详情信息',
-        'https://fluorescentmusic-1301661174.cos.ap-shanghai.myqcloud.com/attachment/2ApfqXEdZb1G1jzijByvog1bdCp.png',
+        'https://fluorescentmusic-1301661174.cos.ap-shanghai.myqcloud.com/attachment/2ApvkSrbLair9Yllz9JzJMCojBr.jpeg',
         1, 0, 0, 0, '2', '2022-06-20 15:26:37.827000', '2022-06-20 15:26:37.827000');
 INSERT INTO `playlist` (`id`, `name`, `description`, `cover_url`, `status`, `recommended`, `special`,
                         `recommend_factor`, `creator_id`, `created_time`, `updated_time`)

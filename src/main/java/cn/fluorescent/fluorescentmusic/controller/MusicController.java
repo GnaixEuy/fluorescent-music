@@ -3,6 +3,7 @@ package cn.fluorescent.fluorescentmusic.controller;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import cn.fluorescent.fluorescentmusic.entity.File;
 import cn.fluorescent.fluorescentmusic.entity.Music;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
@@ -87,6 +88,28 @@ public class MusicController {
         FileVo fileVo = this.fileMapper.toVo(byId);
         this.music2MusicVo(music, musicVo, byId, fileVo);
         return ResponseResult.success(musicVo);
+    }
+
+    @GetMapping(value = {"/status/"})
+    @ApiOperation(value = "获取发布的music信息,发行,下架,草稿")
+    public ResponseResult<Page<MusicVo>> musicByStatus(Page page, String status) {
+        MusicStatus getStatus;
+        switch (status) {
+            case "发行":
+                getStatus = MusicStatus.PUBLISH;
+                break;
+            case "下架":
+                getStatus = MusicStatus.CLOSED;
+                break;
+            default:
+                getStatus = MusicStatus.DRAFT;
+        }
+        page = this.musicService.page(page, Wrappers.<Music>lambdaQuery().eq(Music::getStatus, getStatus));
+        List records = page.getRecords();
+        List<MusicVo> musicVos = this.musicList2MusicVoList(records);
+        page.setRecords(musicVos);
+        return ResponseResult.success(page);
+
     }
 
     @GetMapping(value = {""})

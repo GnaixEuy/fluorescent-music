@@ -30,7 +30,7 @@ class UserDaoTest {
 
     @Test
     public void insert(){
-        User user = new User("测试11111","happy测试1","123123123",Gender.MALE,Boolean.FALSE,Boolean.TRUE,null,null,null);
+        User user = new User("测试11111", "happy测试1", "123123123", Gender.MALE, Boolean.FALSE, Boolean.TRUE, null, null, null, null, null);
         int insert = this.userDao.insert(user);
         Assertions.assertEquals(insert, 1);
     }
