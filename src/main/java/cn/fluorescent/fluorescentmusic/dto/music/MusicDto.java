@@ -23,6 +23,8 @@ public class MusicDto extends BaseDto {
 
     private String name;
 
+    private String type;
+
     private MusicStatus status = MusicStatus.DRAFT;
 
     private String description;

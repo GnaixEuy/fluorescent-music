@@ -24,6 +24,8 @@ public class MusicUpdateRequest {
     @NotBlank(message = "歌曲名不能为空")
     private String name;
 
+    private String type;
+
     private String description;
 
     private MusicStatus musicStatus;

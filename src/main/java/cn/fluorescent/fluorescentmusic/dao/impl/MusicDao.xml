@@ -6,6 +6,7 @@
         <result column="created_time" property="createdTime"/>
         <result column="updated_time" property="updatedTime"/>
         <result column="name" property="name"/>
+        <result column="type" property="type"/>
         <result column="image_url" property="imageUrl"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>

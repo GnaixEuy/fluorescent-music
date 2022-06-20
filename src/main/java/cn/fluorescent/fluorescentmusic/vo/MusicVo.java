@@ -22,6 +22,8 @@ public class MusicVo extends BaseVo {
 
     private String name;
 
+    private String type;
+
     private String imageUrl;
 
     private MusicStatus status;

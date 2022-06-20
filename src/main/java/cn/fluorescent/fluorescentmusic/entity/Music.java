@@ -26,6 +26,8 @@ public class Music extends BaseEntity implements Serializable {
      */
     private String name;
 
+    private String type;
+
     /**
      * 歌曲简介
      */

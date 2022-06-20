@@ -23,6 +23,8 @@ public class MusicCreateRequest {
     @NotBlank(message = "歌曲名不能为空")
     private String name;
 
+    private String type;
+
     private String description;
 
     private String imageUrl;

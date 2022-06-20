@@ -106,6 +106,26 @@ public class MusicController {
         return ResponseResult.success(page);
     }
 
+    @GetMapping(value = {"/type/{type}"})
+    @ApiOperation(value = "按照种类获取所有音乐接口")
+    public ResponseResult<List<MusicVo>> listByType(@PathVariable String type) {
+        List<Music> list = this.musicService.list(Wrappers.<Music>lambdaQuery()
+                .eq(Music::getType, type));
+        return ResponseResult.success(musicList2MusicVoList(list));
+    }
+
+    @GetMapping("/type/search/{type}")
+    @ApiOperation(value = "按种类获取音乐分页接口，按照需要的数量获取定量音乐数据")
+    public ResponseResult<Page<MusicVo>> searchByType(@RequestBody(required = false) Page searchFilter, @PathVariable String type) {
+        Page page = this.musicService.page(searchFilter,
+                Wrappers.<Music>lambdaQuery()
+                        .eq(Music::getType, type));
+        List records = page.getRecords();
+        List<MusicVo> musicVos = this.musicList2MusicVoList(records);
+        page.setRecords(musicVos);
+        return ResponseResult.success(page);
+    }
+
 
     @GetMapping(value = {"/nameTip/{name}"})
     @ApiOperation(value = "搜索歌曲时返回名称提示")
@@ -145,15 +165,16 @@ public class MusicController {
         if (StrUtil.isNotEmpty(newDescription)) {
             byId.setDescription(newDescription);
         }
-
+        String newType = musicUpdateRequest.getType();
+        if (StrUtil.isNotEmpty(newType)) {
+            byId.setType(newType);
+        }
         byId.setStatus(musicUpdateRequest.getMusicStatus());
         boolean success = this.musicService.updateById(byId);
         if (!success) {
             throw new BizException(ExceptionType.MUSIC_UPDATE_ERROR);
         }
-
         return ResponseResult.success("音乐信息更新成功!");
-
     }
 
 
@@ -161,6 +182,7 @@ public class MusicController {
         fileVo.setUri(this.BASE_URL + "/" + byId.getKey());
         fileVo.setStatus(byId.getFileStatus());
         musicVo.setMusicFile(fileVo);
+        musicVo.setType(music.getType());
         musicVo.setImageUrl(music.getImageUrl());
         musicVo.setCreatedTime(music.getCreatedTime());
         musicVo.setUpdatedTime(music.getUpdatedTime());
