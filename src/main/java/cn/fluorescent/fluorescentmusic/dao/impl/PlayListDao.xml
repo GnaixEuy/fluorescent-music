@@ -9,7 +9,7 @@
         <result column="name" property="name"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>
-        <result column="cover_id" property="coverUrl"/>
+        <result column="cover_url" property="coverUrl"/>
 
         <collection property="creator" column="id" javaType="cn.fluorescent.fluorescentmusic.entity.User"
                     select="findCreatorByCreatorId"/>

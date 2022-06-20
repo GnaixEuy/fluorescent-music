@@ -59,8 +59,6 @@ public class CosUploadUtil {
         } catch (CosClientException e) {
             log.error("CosClientException ={}", e.getMessage());
             throw new CosClientException(e.getMessage());
-        } finally {
-            client.shutdown();
         }
         String url = tencentCos.getBaseUrl() + "/" + filePath;
         log.info("上传路径:" + url);
@@ -69,7 +67,6 @@ public class CosUploadUtil {
         String[] newFileName = filePath.split("/");
         map.put("newFileName", newFileName[1]);
         map.put("filePath", url);
-
         return ResponseResult.success(map);
     }
 

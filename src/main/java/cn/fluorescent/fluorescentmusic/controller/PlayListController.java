@@ -5,6 +5,7 @@ import cn.fluorescent.fluorescentmusic.entity.PlayList;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.PlayListService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,7 @@ public class PlayListController {
     private PlayListService playListService;
 
     @PostMapping(value = {"/{id}/{name}"})
-    @ApiOperation(value = "创建音乐歌单接口，传入创建用户id和歌单名")
+    @ApiOperation(value = "创建音乐歌单接口，传入创建者id和歌单名")
     public ResponseResult<String> create(@PathVariable String id, @PathVariable String name) {
         PlayList playList = new PlayList(name);
         boolean sava = this.playListService.sava(id, playList);
@@ -74,6 +75,14 @@ public class PlayListController {
     @ApiOperation(value = "获取所有歌单")
     public ResponseResult<List<PlayList>> list() {
         return ResponseResult.success(this.playListService.list());
+    }
+
+    @GetMapping(value = {"/{id}"})
+    @ApiOperation(value = "通过id获取歌单信息")
+    public ResponseResult<List<PlayList>> listById(@PathVariable String id) {
+        return ResponseResult.success(this.playListService.list(Wrappers
+                .<PlayList>lambdaQuery()
+                .eq(PlayList::getId, id)));
     }
 
 

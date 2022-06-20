@@ -59,6 +59,7 @@ public class MusicController {
     @Transactional
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
+        music.setType(musicCreateRequest.getType());
         boolean result = this.musicService.save(music);
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
@@ -73,7 +74,6 @@ public class MusicController {
         this.music2MusicVo(music, musicVo, byId, fileVo);
         return ResponseResult.success(musicVo);
     }
-
 
     @GetMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id获取音乐详细信息")

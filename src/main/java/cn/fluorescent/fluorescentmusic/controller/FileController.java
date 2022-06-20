@@ -84,6 +84,7 @@ public class FileController {
             throw new BizException(ExceptionType.FILE_UPLOAD_ERROR);
         }
         String fileNameUUID = this.ksuidIdentifierGenerator.nextUUID(multipartFile);
+        System.out.println(fileNameUUID);
         String filePath = TencentCosConfig.COS_ATTACHMENT + "/" + fileNameUUID + "." + filename[1];
         ResponseResult<HashMap<String, Object>> upload = cosUploadUtil.upload(bucketName, filePath, localFile, originalFilename);
         cn.fluorescent.fluorescentmusic.entity.File file = new cn.fluorescent.fluorescentmusic.entity.File(
