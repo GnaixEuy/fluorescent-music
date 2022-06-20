@@ -6,6 +6,7 @@ import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.RoleService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
-@ApiOperation(value = "角色管理接口")
+@Api(tags = {"角色管理接口"})
 @RequestMapping(value = {"/role"})
 public class RoleController {
 

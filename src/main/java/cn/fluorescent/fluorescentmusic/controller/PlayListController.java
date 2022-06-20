@@ -27,7 +27,7 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
-@Api(value = "歌单接口")
+@Api(tags = {"歌单接口"})
 @RequestMapping(value = {"/playlist"})
 public class PlayListController {
     private PlayListService playListService;

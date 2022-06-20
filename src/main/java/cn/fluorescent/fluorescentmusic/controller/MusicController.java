@@ -40,7 +40,7 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
-@Api(value = "音乐接口")
+@Api(tags = {"音乐接口"})
 @RequestMapping(value = {"/music"})
 public class MusicController {
 
