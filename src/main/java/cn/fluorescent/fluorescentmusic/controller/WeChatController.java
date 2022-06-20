@@ -32,7 +32,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weixin")
-@Api(tags = {"微信登录接口，开发中基本完成，但为经过测试，别用！"})
+@Api(tags = {"微信登录接口"})
 public class WeChatController {
 
     @Value("${weixin.mp.app.id}")
@@ -55,7 +55,7 @@ public class WeChatController {
     }
 
     @PostMapping(value = {"/wxLogin"})
-    @ApiOperation(value = "微信登录接口，返回40401002为后端用户不存在，请发送用户信息进行注册")
+    @ApiOperation(value = "微信登录接口，注册自动失败时返回40401002为后端用户不存在，请尽量携带发送用户信息进行注册")
     public ResponseResult<String> wxLogin(String code, @RequestBody WeChatUserCreateRequest weChatUserCreateRequest) {
         String url = "https://api.weixin.qq.com/sns/jscode2session";
         Map<String, String> param = new HashMap<>();

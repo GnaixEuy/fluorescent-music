@@ -22,6 +22,7 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
+@ApiOperation(value = "角色管理接口")
 @RequestMapping(value = {"/role"})
 public class RoleController {
 

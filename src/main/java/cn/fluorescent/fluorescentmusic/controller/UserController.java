@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,15 +84,15 @@ public class UserController {
      */
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id 更新user数据，返回更新后的vo", httpMethod = "PUT")
-    @RolesAllowed(value = {"ROLE_ADMIN"})
-    public UserVo update(@PathVariable String id, @Validated UserUpdateRequest userUpdateRequest) {
+//    @RolesAllowed(value = {"ROLE_ADMIN"})
+    public UserVo update(@PathVariable String id, @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
         final UserDto userDto = this.userService.update(id, userUpdateRequest);
         return this.userMapper.toVo(userDto);
     }
 
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id，删除user", httpMethod = "DELETE")
-    @RolesAllowed(value = {"ROLE_ADMIN"})
+//    @RolesAllowed(value = {"ROLE_ADMIN"})
     void delete(@PathVariable String id) {
         this.userService.delete(id);
     }

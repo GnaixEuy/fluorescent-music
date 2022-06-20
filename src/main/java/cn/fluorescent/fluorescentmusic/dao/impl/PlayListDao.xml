@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.fluorescent.fluorescentmusic.dao.PlayListDao">
+
+    <resultMap id="playListResultMap" type="cn.fluorescent.fluorescentmusic.entity.PlayList">
+        <id column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="cover_id" property="coverUrl"/>
+
+        <collection property="creator" column="id" javaType="cn.fluorescent.fluorescentmusic.entity.User"
+                    select="findCreatorByCreatorId"/>
+        <collection property="musicList" javaType="java.util.ArrayList"
+                    ofType="cn.fluorescent.fluorescentmusic.entity.Music"
+                    select="findMusicList" column="id"/>
+    </resultMap>
+    <select id="findCreatorByCreatorId" resultMap="cn.fluorescent.fluorescentmusic.dao.UserDao.userResultMap">
+        SELECT *
+        FROM `user`
+        WHERE id IN (SELECT creator_id AS id
+                     FROM `playlist`
+                     WHERE `playlist`.id = #{id})
+    </select>
+    <select id="findMusicList" resultMap="cn.fluorescent.fluorescentmusic.dao.MusicDao.musicResultMap">
+        SELECT *
+        FROM music
+        WHERE id IN (SELECT music_id as id
+                     FROM playlist_music
+                              INNER JOIN `playlist`
+                                         ON `playlist`.id = playlist_music.playlist_id AND `playlist`.id = #{id})
+    </select>
+
+    <insert id="addPlayList">
+        INSERT INTO `playlist` (id, name, description, cover_url, creator_id, created_time, updated_time)
+        VALUES (#{id}, #{name}, #{description}, #{coverUrl}, #{creator.id}, #{createdTime}, #{updatedTime})
+    </insert>
+</mapper>

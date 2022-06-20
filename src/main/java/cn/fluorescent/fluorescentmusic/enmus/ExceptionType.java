@@ -43,6 +43,8 @@ public enum ExceptionType {
 
     FILE_NOT_PERMISSION(40303002, "当前用户无权限修改文件"),
     PLAYLIST_NOT_FOUND(40404001, "歌单不存在"),
+    PLAYLIST_DELETE_ERROR(40404003, "歌单删除失败"),
+    PLAYLIST_CREATE_ERROR(40404002, "歌单创建失败"),
     ARTIST_NOT_FOUND(40405001, "歌手不存在");
 
 

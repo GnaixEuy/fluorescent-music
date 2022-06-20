@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author gnaixeuy
  * @TableName music
  */
-@TableName(value ="music")
+@TableName(value = "music", resultMap = "musicResultMap")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
