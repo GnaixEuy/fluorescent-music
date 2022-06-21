@@ -44,4 +44,11 @@
                        AND `artist`.id = #{id});
 
     </select>
+
+    <insert id="registeredArtist">
+        INSERT INTO `artist` (id, name, remark, photo_url, created_by_user_id, updated_by_user_id, created_time,
+                              updated_time)
+        VALUES (#{id}, #{name}, #{remark}, #{photoUrl}, #{createdBy.id}, #{updatedBy.id}, #{createdTime},
+                #{updatedTime})
+    </insert>
 </mapper>

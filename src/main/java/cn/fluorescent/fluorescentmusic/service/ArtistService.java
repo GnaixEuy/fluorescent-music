@@ -10,4 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ArtistService extends IService<Artist> {
 
+    boolean savaArtist(Artist artist);
+
 }

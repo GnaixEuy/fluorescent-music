@@ -54,14 +54,17 @@ public class Artist extends BaseEntity implements Serializable {
      */
     private Integer recommendFactor;
 
+
     /**
      * 创建人ID
      */
+    @TableField(exist = false)
     private User createdBy;
 
     /**
      * 最后更新人ID
      */
+    @TableField(exist = false)
     private User updatedBy;
 
 

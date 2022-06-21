@@ -15,4 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ArtistDao extends BaseMapper<Artist> {
+
+    int registeredArtist(Artist artist);
+
 }
