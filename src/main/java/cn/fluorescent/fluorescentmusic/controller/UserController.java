@@ -93,13 +93,13 @@ public class UserController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id，删除user", httpMethod = "DELETE")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
-    void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) {
         this.userService.delete(id);
     }
 
     @GetMapping(value = {"/me"})
     @ApiOperation(value = "通过请求头保存的token，获取当前用户的信息", httpMethod = "GET")
-    UserVo me() {
+    public UserVo me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);
         return this.userMapper.toVo(this.userService.getCurrentUser());

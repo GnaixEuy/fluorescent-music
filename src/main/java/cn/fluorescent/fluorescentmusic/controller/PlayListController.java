@@ -93,7 +93,7 @@ public class PlayListController {
         if (StrUtil.isNotBlank(playListUpdateRequest.getDescription())) {
             byId.setDescription(playListUpdateRequest.getDescription());
         }
-        byId.setStatus(statusTranslator(Integer.valueOf(playListUpdateRequest.getStatus())));
+        byId.setStatus(this.statusTranslator(Integer.parseInt(playListUpdateRequest.getStatus())));
         boolean updateResult = this.playListService.updatePlayListById(byId);
         if (!updateResult) {
             throw new BizException(ExceptionType.PLAYLIST_UPDATE_ERROR);

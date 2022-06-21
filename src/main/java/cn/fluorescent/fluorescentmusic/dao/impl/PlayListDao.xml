@@ -42,6 +42,7 @@
         UPDATE `playlist`
         SET id          = #{id},
             name=#{name},
+            status      = #{status},
             description=#{description},
             cover_url=#{coverUrl},
             creator_id=#{creator.id},

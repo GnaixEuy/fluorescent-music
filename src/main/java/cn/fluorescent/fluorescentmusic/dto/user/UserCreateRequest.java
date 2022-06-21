@@ -30,4 +30,6 @@ public class UserCreateRequest {
 
     private Gender gender;
 
+    private String avatarUrl;
+
 }

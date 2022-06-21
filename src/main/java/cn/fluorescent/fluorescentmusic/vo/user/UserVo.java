@@ -26,6 +26,8 @@ public class UserVo extends BaseVo {
 
     private String nickname;
 
+    private String avatarUrl;
+
     private Gender gender;
 
     private Boolean locked;

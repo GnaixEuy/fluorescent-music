@@ -60,7 +60,6 @@ public class MusicController {
     @Transactional
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
-        music.setType(musicCreateRequest.getType());
         boolean result = this.musicService.save(music);
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
@@ -192,7 +191,18 @@ public class MusicController {
         if (StrUtil.isNotEmpty(newType)) {
             byId.setType(newType);
         }
-        byId.setStatus(musicUpdateRequest.getMusicStatus());
+        MusicStatus musicStatus;
+        switch (musicUpdateRequest.getStatus()) {
+            case "2":
+                musicStatus = MusicStatus.PUBLISH;
+                break;
+            case "3":
+                musicStatus = MusicStatus.CLOSED;
+                break;
+            default:
+                musicStatus = MusicStatus.DRAFT;
+        }
+        byId.setStatus(musicStatus);
         boolean success = this.musicService.updateById(byId);
         if (!success) {
             throw new BizException(ExceptionType.MUSIC_UPDATE_ERROR);

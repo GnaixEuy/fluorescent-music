@@ -35,4 +35,7 @@ public class UserDto {
     private String lastLoginIp;
 
     private Date lastLoginTime;
+
+    private String avatarUrl;
+
 }
