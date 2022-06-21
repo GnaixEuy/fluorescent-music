@@ -37,4 +37,17 @@
         INSERT INTO `playlist` (id, name, description, cover_url, creator_id, created_time, updated_time)
         VALUES (#{id}, #{name}, #{description}, #{coverUrl}, #{creator.id}, #{createdTime}, #{updatedTime})
     </insert>
+
+    <update id="updatePlayList">
+        UPDATE `playlist`
+        SET id          = #{id},
+            name=#{name},
+            description=#{description},
+            cover_url=#{coverUrl},
+            creator_id=#{creator.id},
+            created_time=#{createdTime},
+            updated_time= #{updatedTime}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

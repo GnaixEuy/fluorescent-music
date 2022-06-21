@@ -45,6 +45,7 @@ public enum ExceptionType {
     PLAYLIST_NOT_FOUND(40404001, "歌单不存在"),
     PLAYLIST_DELETE_ERROR(40404003, "歌单删除失败"),
     PLAYLIST_CREATE_ERROR(40404002, "歌单创建失败"),
+    PLAYLIST_UPDATE_ERROR(40404004, "歌单更新失败"),
     ARTIST_NOT_FOUND(40405001, "歌手不存在");
 
 

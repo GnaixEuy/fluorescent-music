@@ -61,9 +61,9 @@ public class PlayListServiceImpl extends ServiceImpl<PlayListDao, PlayList> impl
         int delete = this.playListMusicDao.delete(Wrappers
                 .<PlaylistMusic>lambdaQuery()
                 .eq(PlaylistMusic::getPlaylistId, id));
-        if (delete == 0) {
-            throw new BizException(ExceptionType.PLAYLIST_DELETE_ERROR);
-        }
+//        if (delete == 0) {
+//            throw new BizException(ExceptionType.PLAYLIST_DELETE_ERROR);
+//        }
         return true;
     }
 
@@ -100,6 +100,16 @@ public class PlayListServiceImpl extends ServiceImpl<PlayListDao, PlayList> impl
             throw new BizException(ExceptionType.INNER_ERROR);
         }
         return true;
+    }
+
+    /**
+     * 通过用户id 获取 播放列表集合
+     *
+     * @param playList@return
+     */
+    @Override
+    public boolean updatePlayListById(PlayList playList) {
+        return this.playListDao.updatePlayList(playList) == 1;
     }
 
     @Autowired

@@ -1,10 +1,14 @@
 package cn.fluorescent.fluorescentmusic.controller;
 
+import cn.fluorescent.fluorescentmusic.dto.PlayListCreateRequest;
+import cn.fluorescent.fluorescentmusic.dto.PlayListUpdateRequest;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.PlayListStatus;
 import cn.fluorescent.fluorescentmusic.entity.PlayList;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.PlayListService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -34,8 +38,13 @@ public class PlayListController {
 
     @PostMapping(value = {"/{id}/{name}"})
     @ApiOperation(value = "创建音乐歌单接口，传入创建者id和歌单名")
-    public ResponseResult<String> create(@PathVariable String id, @PathVariable String name) {
+    public ResponseResult<String> create(@PathVariable @NotBlank String id,
+                                         @PathVariable @NotBlank String name,
+                                         @RequestBody PlayListCreateRequest playListCreateRequest) {
         PlayList playList = new PlayList(name);
+        playList.setDescription(playListCreateRequest.getDescription());
+        playList.setCoverUrl(playListCreateRequest.getCoverUrl());
+        playList.setStatus(statusTranslator(Integer.valueOf(playListCreateRequest.getStatus())));
         boolean sava = this.playListService.sava(id, playList);
         if (!sava) {
             throw new BizException(ExceptionType.PLAYLIST_CREATE_ERROR);
@@ -47,6 +56,7 @@ public class PlayListController {
     @ApiOperation(value = "删除歌单接口，传入歌单id")
     @Transactional
     public ResponseResult<String> delete(@PathVariable String id) {
+        System.out.println(id);
         boolean clear = this.playListService.clear(id);
         if (clear) {
             boolean b = this.playListService.removeById(id);
@@ -59,15 +69,48 @@ public class PlayListController {
 
     @PutMapping(value = {"/add/{id}/{musicId}"})
     @ApiOperation(value = "传入歌单id和歌曲id，给歌单添加音乐")
-    public ResponseResult<String> add(@PathVariable @NotBlank String id, @PathVariable @NotBlank String musicId) {
-        this.playListService.associate(id, musicId);
+    public ResponseResult<String> add(@PathVariable @NotBlank String id,
+                                      @PathVariable @NotBlank String musicId) {
+        try {
+            this.playListService.associate(id, musicId);
+        } catch (BizException e) {
+            throw new BizException(ExceptionType.PLAYLIST_UPDATE_ERROR);
+        }
         return ResponseResult.success("添加成功");
     }
 
+    @PutMapping(value = {"/{id}"})
+    @ApiOperation(value = "更新歌单描述接口")
+    public ResponseResult<String> update(@PathVariable @NotBlank String id,
+                                         @RequestBody PlayListUpdateRequest playListUpdateRequest) {
+        PlayList byId = this.playListService.getById(id);
+        if (byId == null) {
+            throw new BizException(ExceptionType.PLAYLIST_NOT_FOUND);
+        }
+        if (StrUtil.isNotBlank(playListUpdateRequest.getName())) {
+            byId.setName(playListUpdateRequest.getName());
+        }
+        if (StrUtil.isNotBlank(playListUpdateRequest.getDescription())) {
+            byId.setDescription(playListUpdateRequest.getDescription());
+        }
+        byId.setStatus(statusTranslator(Integer.valueOf(playListUpdateRequest.getStatus())));
+        boolean updateResult = this.playListService.updatePlayListById(byId);
+        if (!updateResult) {
+            throw new BizException(ExceptionType.PLAYLIST_UPDATE_ERROR);
+        }
+        return ResponseResult.success("歌单描述更新成功");
+    }
+
+
     @PutMapping(value = {"/remove/{id}/{musicId}"})
-    @ApiOperation(value = "传入歌单id和歌曲id，给歌单添加音乐")
-    public ResponseResult<String> remove(@PathVariable @NotBlank String id, @PathVariable @NotBlank String musicId) {
-        this.playListService.removeMusic(id, musicId);
+    @ApiOperation(value = "传入歌单id和歌曲id，给歌单移除音乐")
+    public ResponseResult<String> remove(@PathVariable @NotBlank String id,
+                                         @PathVariable @NotBlank String musicId) {
+        try {
+            this.playListService.removeMusic(id, musicId);
+        } catch (BizException e) {
+            throw new BizException(ExceptionType.PLAYLIST_UPDATE_ERROR);
+        }
         return ResponseResult.success("歌单音乐移除成功");
     }
 
@@ -100,6 +143,21 @@ public class PlayListController {
                     put("creator_id", id);
                 }});
         return ResponseResult.success(list);
+    }
+
+    private PlayListStatus statusTranslator(Integer status) {
+        PlayListStatus playListStatus;
+        switch (status) {
+            case 2:
+                playListStatus = PlayListStatus.PUBLISHED;
+                break;
+            case 3:
+                playListStatus = PlayListStatus.CLOSED;
+                break;
+            default:
+                playListStatus = PlayListStatus.DRAFT;
+        }
+        return playListStatus;
     }
 
     @Autowired

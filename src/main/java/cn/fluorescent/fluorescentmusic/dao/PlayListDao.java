@@ -17,4 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PlayListDao extends BaseMapper<PlayList> {
 
     int addPlayList(PlayList playList);
+
+    int updatePlayList(PlayList playList);
+
 }

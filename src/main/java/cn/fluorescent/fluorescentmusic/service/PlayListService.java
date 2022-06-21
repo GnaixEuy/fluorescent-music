@@ -44,8 +44,11 @@ public interface PlayListService extends IService<PlayList> {
 
     /**
      * 通过用户id 获取 播放列表集合
+     *
      * @param id
      * @return
      */
 //    List<PlayList> listByUserId(String id);
+
+    boolean updatePlayListById(PlayList playList);
 }
