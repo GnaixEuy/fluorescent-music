@@ -43,6 +43,8 @@ import java.util.stream.Collectors;
 @Api(tags = {"用户"})
 public class UserController {
 
+    public static final String DEFAULT_AVATAR_URL = "https://fluorescentmusic-1301661174.cos.ap-shanghai.myqcloud.com/attachment/2AsOsGfmqB4Qf3vBHLJuPvHmquJ.png";
+
     private UserService userService;
     private RoleService roleService;
     private UserRoleService userRoleService;
@@ -51,7 +53,7 @@ public class UserController {
 
 
     @GetMapping(value = {"/all"})
-    @Cacheable(value = {"userListCache"})
+    @Cacheable(cacheNames = {"userListCache"})
     @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
     @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<List<UserVo>> list() {
@@ -72,9 +74,10 @@ public class UserController {
 
     @PostMapping(value = {""})
     @Transactional
-    @CacheEvict(value = {"userListCache"})
+    @CacheEvict(cacheNames = {"userListCache"}, allEntries = true)
     @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo", httpMethod = "POST")
     public UserVo create(@Validated @RequestBody UserCreateRequest userCreateRequest) {
+        userCreateRequest.setAvatarUrl(UserController.DEFAULT_AVATAR_URL);
         UserDto userDto = this.userService.create(userCreateRequest);
         UserRole userRole = this.userRoleService.getOne(Wrappers
                 .<UserRole>lambdaQuery()
@@ -103,7 +106,7 @@ public class UserController {
      * 时间自动更新bug 已修复，待全面测试
      */
     @PutMapping(value = {"/{id}"})
-    @CacheEvict(value = {"userListCache", "userInfo"})
+    @CacheEvict(cacheNames = {"userListCache", "userInfo"}, allEntries = true)
     @ApiOperation(value = "通过id 更新user数据，返回更新后的vo", httpMethod = "PUT")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo update(@PathVariable String id, @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
@@ -112,7 +115,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = {"/{id}"})
-    @CacheEvict(value = {"userListCache", "userInfo"})
+    @CacheEvict(cacheNames = {"userListCache", "userInfo"}, allEntries = true)
     @ApiOperation(value = "通过id，删除user", httpMethod = "DELETE")
     @RolesAllowed(value = {"ROLE_ADMIN", "ROLE_USER"})
     public void delete(@PathVariable String id) {

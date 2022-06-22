@@ -8,6 +8,7 @@ import cn.fluorescent.fluorescentmusic.entity.PlayList;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.PlayListService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -40,13 +41,14 @@ public class PlayListController {
 
     @PostMapping(value = {"/{id}/{name}"})
     @ApiOperation(value = "创建音乐歌单接口，传入创建者id和歌单名")
-    @CacheEvict(value = {"playListCache"})
+    @CacheEvict(cacheNames = {"playListCache", "playListByTypeCache"}, allEntries = true)
     public ResponseResult<String> create(@PathVariable @NotBlank String id,
                                          @PathVariable @NotBlank String name,
                                          @RequestBody PlayListCreateRequest playListCreateRequest) {
         PlayList playList = new PlayList(name);
         playList.setDescription(playListCreateRequest.getDescription());
         playList.setCoverUrl(playListCreateRequest.getCoverUrl());
+        playList.setType(playListCreateRequest.getType());
         playList.setStatus(statusTranslator(Integer.valueOf(playListCreateRequest.getStatus())));
         boolean sava = this.playListService.sava(id, playList);
         if (!sava) {
@@ -58,9 +60,8 @@ public class PlayListController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "删除歌单接口，传入歌单id")
     @Transactional
-    @CacheEvict(value = {"playListCache"})
+    @CacheEvict(cacheNames = {"playListCache", "playListByTypeCache"}, allEntries = true)
     public ResponseResult<String> delete(@PathVariable String id) {
-        System.out.println(id);
         boolean clear = this.playListService.clear(id);
         if (clear) {
             boolean b = this.playListService.removeById(id);
@@ -73,7 +74,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/add/{id}/{musicId}"})
     @ApiOperation(value = "传入歌单id和歌曲id，给歌单添加音乐")
-    @CacheEvict(value = {"playListCache"})
+    @CacheEvict(cacheNames = {"playListCache", "playListByTypeCache"}, allEntries = true)
     public ResponseResult<String> add(@PathVariable @NotBlank String id,
                                       @PathVariable @NotBlank String musicId) {
         try {
@@ -86,7 +87,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "更新歌单描述接口")
-    @CacheEvict(value = {"playListCache"})
+    @CacheEvict(cacheNames = {"playListCache", "playListByTypeCache"}, allEntries = true)
     public ResponseResult<String> update(@PathVariable @NotBlank String id,
                                          @RequestBody PlayListUpdateRequest playListUpdateRequest) {
         PlayList byId = this.playListService.getById(id);
@@ -99,6 +100,9 @@ public class PlayListController {
         if (StrUtil.isNotBlank(playListUpdateRequest.getDescription())) {
             byId.setDescription(playListUpdateRequest.getDescription());
         }
+        if (StrUtil.isNotBlank(playListUpdateRequest.getType())) {
+            byId.setType(playListUpdateRequest.getType());
+        }
         byId.setStatus(this.statusTranslator(Integer.parseInt(playListUpdateRequest.getStatus())));
         boolean updateResult = this.playListService.updatePlayListById(byId);
         if (!updateResult) {
@@ -110,7 +114,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/remove/{id}/{musicId}"})
     @ApiOperation(value = "传入歌单id和歌曲id，给歌单移除音乐")
-    @CacheEvict(value = {"playListCache"})
+    @CacheEvict(cacheNames = {"playListCache", "playListByTypeCache"}, allEntries = true)
     public ResponseResult<String> remove(@PathVariable @NotBlank String id,
                                          @PathVariable @NotBlank String musicId) {
         try {
@@ -142,6 +146,21 @@ public class PlayListController {
     public ResponseResult<Page<PlayList>> search(Page<PlayList> page) {
         return ResponseResult.success(this.playListService.page(page));
     }
+
+    @GetMapping(value = {"/type/{type}"})
+    @Cacheable(value = {"playListByTypeCache"}, key = "#type")
+    @ApiOperation(value = "传入type，获取指定type的歌单")
+    public ResponseResult<List<PlayList>> type(@PathVariable String type) {
+        List<PlayList> list = this.playListService.list(
+                Wrappers
+                        .<PlayList>lambdaQuery()
+                        .eq(PlayList::getType, type));
+        if (CollectionUtil.isEmpty(list)) {
+            throw new BizException(ExceptionType.PLAYLIST_NOT_FOUND);
+        }
+        return ResponseResult.success(list);
+    }
+
 
     @GetMapping(value = {"/user/{id}"})
     @ApiOperation(value = "获取指定用户的歌单列表，传入用户的id")

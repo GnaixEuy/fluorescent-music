@@ -10,5 +10,14 @@ spring:
     schemas: ${DATABASE_NAME}
     enabled: false
     encoding: UTF-8
+  redis:
+    username: root
+    password:
+    database: 0
+    host: localhost
+    port: 6379
+  cache:
+    redis:
+      time-to-live: 1800000
 server:
   port: 80

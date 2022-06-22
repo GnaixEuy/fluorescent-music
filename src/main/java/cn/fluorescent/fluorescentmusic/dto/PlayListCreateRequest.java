@@ -21,5 +21,6 @@ public class PlayListCreateRequest {
     private String description;
     private String coverUrl;
     private String status;
+    private String type;
 
 }

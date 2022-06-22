@@ -10,6 +10,7 @@
         <result column="description" property="description"/>
         <result column="status" property="status"/>
         <result column="cover_url" property="coverUrl"/>
+        <result column="type" property="type"/>
 
         <collection property="creator" column="id" javaType="cn.fluorescent.fluorescentmusic.entity.User"
                     select="findCreatorByCreatorId"/>
@@ -34,14 +35,15 @@
     </select>
 
     <insert id="addPlayList">
-        INSERT INTO `playlist` (id, name, description, cover_url, creator_id, created_time, updated_time)
-        VALUES (#{id}, #{name}, #{description}, #{coverUrl}, #{creator.id}, #{createdTime}, #{updatedTime})
+        INSERT INTO `playlist` (id, name, description, type, cover_url, creator_id, created_time, updated_time)
+        VALUES (#{id}, #{name}, #{description}, #{type}, #{coverUrl}, #{creator.id}, #{createdTime}, #{updatedTime})
     </insert>
 
     <update id="updatePlayList">
         UPDATE `playlist`
         SET id          = #{id},
             name=#{name},
+            type        = #{type},
             status      = #{status},
             description=#{description},
             cover_url=#{coverUrl},
