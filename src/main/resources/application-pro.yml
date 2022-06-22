@@ -11,7 +11,7 @@ spring:
     enabled: false
     encoding: UTF-8
   redis:
-    username: root
+    username:
     password: ${REDIS_PASSWORD}
     database: 0
     host: ${REDIS_HOST}
