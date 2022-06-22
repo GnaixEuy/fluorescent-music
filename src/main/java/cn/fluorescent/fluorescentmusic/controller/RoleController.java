@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +26,6 @@ import java.util.List;
  */
 @RestController
 @Api(tags = {"角色管理接口"})
-//TODO cache
 @RequestMapping(value = {"/role"})
 public class RoleController {
 
@@ -32,6 +33,7 @@ public class RoleController {
 
 
     @GetMapping(value = {"/"})
+    @Cacheable(value = {"roleListCache"})
     @ApiOperation(value = "获取所有角色")
     public ResponseResult<List<Role>> list() {
         return ResponseResult.success(this.roleService.list());
@@ -39,6 +41,7 @@ public class RoleController {
     }
 
     @PostMapping(value = {"/"})
+    @CacheEvict(cacheNames = {"roleListCache"}, allEntries = true)
     @ApiOperation(value = "添加角色信息")
     public ResponseResult<String> create(Role role) {
         boolean save = this.roleService.save(role);
@@ -49,6 +52,7 @@ public class RoleController {
     }
 
     @PostMapping(value = {"/{title}"})
+    @CacheEvict(cacheNames = {"roleListCache"}, allEntries = true)
     @ApiOperation(value = "通过名称删除角色信息，有用户使用该角色信息的时候删除会出现异常")
     public ResponseResult<String> delete(@PathVariable String title) {
         boolean remove = this.roleService.remove(Wrappers.<Role>lambdaQuery().eq(Role::getName, title));

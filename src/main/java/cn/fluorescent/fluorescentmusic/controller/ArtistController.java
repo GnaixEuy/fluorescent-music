@@ -17,6 +17,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +34,6 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
-//TODO cache
 @Api(tags = "音乐人接口")
 @RequestMapping(value = {"/artist"})
 public class ArtistController {
@@ -42,6 +43,7 @@ public class ArtistController {
     private UserRoleService userRoleService;
 
     @GetMapping(value = {"/"})
+    @Cacheable(value = {"artistListCache"})
     @ApiOperation(value = "获取所有音乐人信息接口")
     public ResponseResult<List<Artist>> list() {
         return ResponseResult.success(this.artistService.list());
@@ -55,6 +57,7 @@ public class ArtistController {
 
     @PostMapping(value = {"/{id}"})
     @Transactional
+    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
     @ApiOperation(value = "注册音乐人接口，传入用户id和音乐人描述remark，可升级用户身份至音乐人")
     public ResponseResult<String> register(@PathVariable String id, @RequestBody String remark) {
         UserRole isRepeat = this.userRoleService.getOne(Wrappers
@@ -85,6 +88,7 @@ public class ArtistController {
 
     @DeleteMapping(value = {"/{id}"})
     @Transactional
+    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
     @ApiOperation(value = "通过音乐人id 取消音乐人资格")
     public ResponseResult<String> delete(@PathVariable String id) {
         Artist artist = this.artistService.getById(id);
@@ -104,6 +108,7 @@ public class ArtistController {
     }
 
     @PutMapping(value = {"/{id}"})
+    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
     @ApiOperation(value = "通过歌手id 进行信息更新")
     public ResponseResult<String> update(@PathVariable String id,
                                          @RequestBody ArtistUpdateRequest artistUpdateRequest) {
