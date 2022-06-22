@@ -38,5 +38,9 @@ COPY --from=build /app/target/fluorescent-music-0.0.1-SNAPSHOT.jar .
 # 暴露端口
 EXPOSE 80
 
+RUN ["echo","'daemonize yes'",">>","/etc/redis.conf"]
+
+RUN ["/usr/bin/redis-server"]
+
 # 执行启动命令
 CMD ["java", "-jar", "/app/fluorescent-music-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=pro"]

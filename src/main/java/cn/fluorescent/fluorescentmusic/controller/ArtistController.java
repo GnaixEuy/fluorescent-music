@@ -32,9 +32,11 @@ import java.util.List;
  * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
  */
 @RestController
+//TODO cache
 @Api(tags = "音乐人接口")
 @RequestMapping(value = {"/artist"})
 public class ArtistController {
+
     private ArtistService artistService;
     private UserService userService;
     private UserRoleService userRoleService;

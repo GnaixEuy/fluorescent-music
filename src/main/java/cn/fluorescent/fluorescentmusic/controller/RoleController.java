@@ -24,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @Api(tags = {"角色管理接口"})
+//TODO cache
 @RequestMapping(value = {"/role"})
 public class RoleController {
 

@@ -60,7 +60,7 @@ public class MusicController {
     @PostMapping(value = {""})
     @ApiOperation(value = "增加音乐接口")
     @Transactional
-    @CacheEvict(value = {"musicListCache", "musicListByType"})
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType"}, allEntries = true)
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
         boolean result = this.musicService.save(music);
@@ -170,7 +170,7 @@ public class MusicController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id删除对应音乐")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
-    @CacheEvict(value = {"musicListCache", "musicListByType"})
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType"}, allEntries = true)
     public ResponseResult<String> delete(@PathVariable String id) {
         boolean b = this.musicService.removeById(id);
         if (!b) {
@@ -182,7 +182,7 @@ public class MusicController {
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id修改音乐信息状态等")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
-    @CacheEvict(value = {"musicListCache", "musicListByType"})
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType"}, allEntries = true)
     public ResponseResult<String> update(@Validated @RequestBody MusicUpdateRequest musicUpdateRequest, @PathVariable String id) {
         System.out.println(musicUpdateRequest);
         Music byId = this.musicService.getById(id);

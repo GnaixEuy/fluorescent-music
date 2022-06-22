@@ -32,6 +32,7 @@ public class PlayList extends BaseEntity implements Serializable {
     private String coverUrl;
     private PlayListStatus status = PlayListStatus.DRAFT;
     private User creator;
+    private String type;
 
     @TableField(exist = false)
     private List<Music> musicList;

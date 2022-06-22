@@ -58,12 +58,9 @@ public class PlayListServiceImpl extends ServiceImpl<PlayListDao, PlayList> impl
      */
     @Override
     public boolean clear(String id) {
-        int delete = this.playListMusicDao.delete(Wrappers
+        this.playListMusicDao.delete(Wrappers
                 .<PlaylistMusic>lambdaQuery()
                 .eq(PlaylistMusic::getPlaylistId, id));
-//        if (delete == 0) {
-//            throw new BizException(ExceptionType.PLAYLIST_DELETE_ERROR);
-//        }
         return true;
     }
 

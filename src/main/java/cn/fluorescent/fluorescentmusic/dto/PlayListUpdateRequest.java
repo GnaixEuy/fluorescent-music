@@ -20,6 +20,7 @@ public class PlayListUpdateRequest {
 
     private String name;
     private String description;
+    private String type;
     private String coverUrl;
     private String status;
 }
