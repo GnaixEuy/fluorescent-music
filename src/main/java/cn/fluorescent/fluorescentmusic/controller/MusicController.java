@@ -23,6 +23,8 @@ import io.swagger.annotations.ApiOperation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +60,7 @@ public class MusicController {
     @PostMapping(value = {""})
     @ApiOperation(value = "增加音乐接口")
     @Transactional
+    @CacheEvict(value = {"musicListCache", "musicListByType"})
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
         boolean result = this.musicService.save(music);
@@ -113,6 +116,7 @@ public class MusicController {
 
     @GetMapping(value = {""})
     @ApiOperation(value = "获取所有音乐接口")
+    @Cacheable(value = {"musicListCache"})
     public ResponseResult<List<MusicVo>> list() {
         List<Music> list = this.musicService.list();
         return ResponseResult.success(musicList2MusicVoList(list));
@@ -130,6 +134,7 @@ public class MusicController {
 
     @GetMapping(value = {"/type/{type}"})
     @ApiOperation(value = "按照种类获取所有音乐接口")
+    @Cacheable(value = {"musicListByType"}, key = "#type")
     public ResponseResult<List<MusicVo>> listByType(@PathVariable String type) {
         List<Music> list = this.musicService.list(Wrappers.<Music>lambdaQuery()
                 .eq(Music::getType, type));
@@ -165,6 +170,7 @@ public class MusicController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id删除对应音乐")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
+    @CacheEvict(value = {"musicListCache", "musicListByType"})
     public ResponseResult<String> delete(@PathVariable String id) {
         boolean b = this.musicService.removeById(id);
         if (!b) {
@@ -176,6 +182,7 @@ public class MusicController {
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id修改音乐信息状态等")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
+    @CacheEvict(value = {"musicListCache", "musicListByType"})
     public ResponseResult<String> update(@Validated @RequestBody MusicUpdateRequest musicUpdateRequest, @PathVariable String id) {
         System.out.println(musicUpdateRequest);
         Music byId = this.musicService.getById(id);

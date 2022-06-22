@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "playlist", resultMap = "playListResultMap")
-public class PlayList extends BaseEntity {
+public class PlayList extends BaseEntity implements Serializable {
 
     private String name;
     private String description;

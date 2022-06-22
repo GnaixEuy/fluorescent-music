@@ -2,6 +2,8 @@ package cn.fluorescent.fluorescentmusic.entity;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -16,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class Role extends BaseEntity {
+public class Role extends BaseEntity implements Serializable {
 
     private String name;
 

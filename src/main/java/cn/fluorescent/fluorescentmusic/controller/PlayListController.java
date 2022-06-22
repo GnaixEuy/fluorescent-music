@@ -14,6 +14,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,7 @@ public class PlayListController {
 
     @PostMapping(value = {"/{id}/{name}"})
     @ApiOperation(value = "创建音乐歌单接口，传入创建者id和歌单名")
+    @CacheEvict(value = {"playListCache"})
     public ResponseResult<String> create(@PathVariable @NotBlank String id,
                                          @PathVariable @NotBlank String name,
                                          @RequestBody PlayListCreateRequest playListCreateRequest) {
@@ -55,6 +58,7 @@ public class PlayListController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "删除歌单接口，传入歌单id")
     @Transactional
+    @CacheEvict(value = {"playListCache"})
     public ResponseResult<String> delete(@PathVariable String id) {
         System.out.println(id);
         boolean clear = this.playListService.clear(id);
@@ -69,6 +73,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/add/{id}/{musicId}"})
     @ApiOperation(value = "传入歌单id和歌曲id，给歌单添加音乐")
+    @CacheEvict(value = {"playListCache"})
     public ResponseResult<String> add(@PathVariable @NotBlank String id,
                                       @PathVariable @NotBlank String musicId) {
         try {
@@ -81,6 +86,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "更新歌单描述接口")
+    @CacheEvict(value = {"playListCache"})
     public ResponseResult<String> update(@PathVariable @NotBlank String id,
                                          @RequestBody PlayListUpdateRequest playListUpdateRequest) {
         PlayList byId = this.playListService.getById(id);
@@ -104,6 +110,7 @@ public class PlayListController {
 
     @PutMapping(value = {"/remove/{id}/{musicId}"})
     @ApiOperation(value = "传入歌单id和歌曲id，给歌单移除音乐")
+    @CacheEvict(value = {"playListCache"})
     public ResponseResult<String> remove(@PathVariable @NotBlank String id,
                                          @PathVariable @NotBlank String musicId) {
         try {
@@ -116,6 +123,7 @@ public class PlayListController {
 
     @GetMapping(value = {"/"})
     @ApiOperation(value = "获取所有歌单")
+    @Cacheable(value = {"playListCache"})
     public ResponseResult<List<PlayList>> list() {
         return ResponseResult.success(this.playListService.list());
     }

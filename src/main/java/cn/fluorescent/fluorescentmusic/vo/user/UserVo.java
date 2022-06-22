@@ -4,6 +4,7 @@ import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.vo.BaseVo;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVo extends BaseVo {
+public class UserVo extends BaseVo implements Serializable {
 
     private String username;
 

@@ -4,6 +4,8 @@ import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
 import cn.fluorescent.fluorescentmusic.vo.file.FileVo;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -18,7 +20,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicVo extends BaseVo {
+public class MusicVo extends BaseVo implements Serializable {
 
     private String name;
 

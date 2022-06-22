@@ -3,6 +3,8 @@ package cn.fluorescent.fluorescentmusic.vo.user;
 import cn.fluorescent.fluorescentmusic.vo.BaseVo;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
  *
@@ -17,7 +19,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleVo extends BaseVo {
+public class RoleVo extends BaseVo implements Serializable {
 
     private String id;
 

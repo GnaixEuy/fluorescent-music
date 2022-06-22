@@ -14,6 +14,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +45,7 @@ public class UserController {
 
 
     @GetMapping(value = {"/all"})
+    @Cacheable(value = {"userListCache"})
     @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
 //        @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<List<UserVo>> list() {
@@ -62,6 +65,7 @@ public class UserController {
     }
 
     @PostMapping(value = {""})
+    @CacheEvict(value = {"userListCache"})
     @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo", httpMethod = "POST")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo create(@Validated @RequestBody UserCreateRequest userCreateRequest) {
@@ -69,6 +73,7 @@ public class UserController {
     }
 
     @GetMapping(value = {"/{id}"})
+    @Cacheable(value = {"userInfo"}, key = "#id")
     @ApiOperation(value = "通过id获取UserVo信息", httpMethod = "GET")
     public UserVo get(@PathVariable String id) {
         final UserDto userDto = this.userService.get(id);
@@ -83,6 +88,7 @@ public class UserController {
      * 时间自动更新bug 已修复，待全面测试
      */
     @PutMapping(value = {"/{id}"})
+    @CacheEvict(value = {"userListCache", "userInfo"})
     @ApiOperation(value = "通过id 更新user数据，返回更新后的vo", httpMethod = "PUT")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo update(@PathVariable String id, @Validated @RequestBody UserUpdateRequest userUpdateRequest) {
@@ -91,6 +97,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = {"/{id}"})
+    @CacheEvict(value = {"userListCache", "userInfo"})
     @ApiOperation(value = "通过id，删除user", httpMethod = "DELETE")
 //    @RolesAllowed(value = {"ROLE_ADMIN"})
     public void delete(@PathVariable String id) {
