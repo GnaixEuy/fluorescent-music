@@ -1,6 +1,5 @@
 package cn.fluorescent.fluorescentmusic.dto.user;
 
-import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -28,7 +27,7 @@ public class UserCreateRequest {
 
     private String nickname;
 
-    private Gender gender;
+    private String gender;
 
     private String avatarUrl;
 

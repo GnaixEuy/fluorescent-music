@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final long EXPIRATION_TIME = 864000000;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
+
+    public static final String USER_REGISTER = "/users";
     public static final String CREATE_TOKEN_URL = "/tokens";
     public static final String SITE_SETTING_URL = "/settings/site";
 
@@ -52,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(SecurityConfig.CREATE_TOKEN_URL).permitAll()
                 .antMatchers(SecurityConfig.SITE_SETTING_URL).permitAll()
-//                .antMatchers("/playlists/**").permitAll()
+                .antMatchers(SecurityConfig.USER_REGISTER).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))

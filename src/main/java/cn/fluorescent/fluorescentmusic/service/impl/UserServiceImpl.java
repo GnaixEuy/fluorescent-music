@@ -71,8 +71,24 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         final String username = userCreateRequest.getUsername();
         this.checkUserName(username);
         try {
-            final User user = this.userMapper.createEntity(userCreateRequest);
-            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            User user = new User();
+            user.setUsername(username);
+            user.setNickname(userCreateRequest.getNickname());
+            user.setPassword(this.passwordEncoder.encode(userCreateRequest.getPassword()));
+            user.setAvatarUrl(userCreateRequest.getAvatarUrl());
+            Gender gender;
+            switch (userCreateRequest.getGender()) {
+                case "1":
+                    gender = Gender.FEMALE;
+                    break;
+                case "2":
+                    gender = Gender.MALE;
+                    break;
+                default:
+                    gender = Gender.UNKNOWN;
+                    break;
+            }
+            user.setGender(gender);
             final int result = this.userDao.insert(user);
             if (result == 1) {
                 final User resultUser = this.userDao.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));

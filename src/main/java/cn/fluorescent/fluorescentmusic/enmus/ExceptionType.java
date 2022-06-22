@@ -49,6 +49,7 @@ public enum ExceptionType {
     ARTIST_INSERT_ERROR(40405003, "歌手创建失败"),
     ARTIST_DELETE_ERROR(40405005, "歌手移除失败"),
     ARTIST_UPDATE_ERROR(40405006, "歌手信息更新失败"),
+    ARTIST_ALREADY_REGISTERED(40405007, "歌手已注册"),
     ARTIST_NOT_FOUND(40405001, "歌手不存在");
 
 

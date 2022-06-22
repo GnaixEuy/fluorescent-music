@@ -4,12 +4,15 @@ import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
 import cn.fluorescent.fluorescentmusic.dto.user.UserUpdateRequest;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
+import cn.fluorescent.fluorescentmusic.entity.UserRole;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.UserMapper;
 import cn.fluorescent.fluorescentmusic.service.RoleService;
+import cn.fluorescent.fluorescentmusic.service.UserRoleService;
 import cn.fluorescent.fluorescentmusic.service.UserService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import cn.fluorescent.fluorescentmusic.vo.user.UserVo;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,9 +21,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +45,7 @@ public class UserController {
 
     private UserService userService;
     private RoleService roleService;
+    private UserRoleService userRoleService;
 
     private UserMapper userMapper;
 
@@ -47,7 +53,7 @@ public class UserController {
     @GetMapping(value = {"/all"})
     @Cacheable(value = {"userListCache"})
     @ApiOperation(value = "获取全部用户信息，以uservo 形式展示")
-//        @RolesAllowed(value = {"ROLE_ADMIN"})
+    @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<List<UserVo>> list() {
         return ResponseResult.success(userService.list()
                 .stream()
@@ -58,22 +64,31 @@ public class UserController {
 
     @GetMapping(value = {""})
     @ApiOperation(value = "用户分页检索，传入对应的size、total等参数获取需要的用户分页数据")
-//    @RolesAllowed(value = {"ROLE_ADMIN"})
+    @RolesAllowed(value = {"ROLE_ADMIN"})
     public ResponseResult<Page<UserVo>> search(Page page) {
         return ResponseResult.success(this.userService.search(page));
 
     }
 
     @PostMapping(value = {""})
+    @Transactional
     @CacheEvict(value = {"userListCache"})
     @ApiOperation(value = "创建user接口,以json的形式使用POST传入，返回创建成功的vo", httpMethod = "POST")
-//    @RolesAllowed(value = {"ROLE_ADMIN"})
     public UserVo create(@Validated @RequestBody UserCreateRequest userCreateRequest) {
-        return this.userMapper.toVo(this.userService.create(userCreateRequest));
+        UserDto userDto = this.userService.create(userCreateRequest);
+        UserRole userRole = this.userRoleService.getOne(Wrappers
+                .<UserRole>lambdaQuery()
+                .eq(UserRole::getUserId, userDto.getId())
+                .eq(UserRole::getRoleId, "1"));
+        if (userRole == null) {
+            this.userRoleService.save(new UserRole(userDto.getId(), "1"));
+        }
+        return this.userMapper.toVo(userDto);
     }
 
     @GetMapping(value = {"/{id}"})
     @Cacheable(value = {"userInfo"}, key = "#id")
+    @RolesAllowed(value = {"ROLE_ADMIN"})
     @ApiOperation(value = "通过id获取UserVo信息", httpMethod = "GET")
     public UserVo get(@PathVariable String id) {
         final UserDto userDto = this.userService.get(id);
@@ -99,7 +114,7 @@ public class UserController {
     @DeleteMapping(value = {"/{id}"})
     @CacheEvict(value = {"userListCache", "userInfo"})
     @ApiOperation(value = "通过id，删除user", httpMethod = "DELETE")
-//    @RolesAllowed(value = {"ROLE_ADMIN"})
+    @RolesAllowed(value = {"ROLE_ADMIN", "ROLE_USER"})
     public void delete(@PathVariable String id) {
         this.userService.delete(id);
     }
@@ -135,5 +150,9 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+    @Autowired
+    public void setUserRoleService(UserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
+    }
 }
 

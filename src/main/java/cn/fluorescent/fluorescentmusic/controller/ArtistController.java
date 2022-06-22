@@ -55,6 +55,13 @@ public class ArtistController {
     @Transactional
     @ApiOperation(value = "注册音乐人接口，传入用户id和音乐人描述remark，可升级用户身份至音乐人")
     public ResponseResult<String> register(@PathVariable String id, @RequestBody String remark) {
+        UserRole isRepeat = this.userRoleService.getOne(Wrappers
+                .<UserRole>lambdaQuery()
+                .eq(UserRole::getUserId, id)
+                .eq(UserRole::getRoleId, "3"));
+        if (isRepeat != null) {
+            throw new BizException(ExceptionType.ARTIST_ALREADY_REGISTERED);
+        }
         User byId = this.userService.getById(id);
         Artist artist = new Artist();
         artist.setRemark(remark);
