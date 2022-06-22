@@ -12,9 +12,9 @@ spring:
     encoding: UTF-8
   redis:
     username: root
-    password:
+    password: ${REDIS_PASSWORD}
     database: 0
-    host: localhost
+    host: ${REDIS_HOST}
     port: 6379
   cache:
     redis:

@@ -26,7 +26,7 @@ ENV DATABASE_TYPE mysql
 
 # 安装依赖包，如需其他依赖包，请到alpine依赖包管理(https://pkgs.alpinelinux.org/packages?name=php8*imagick*&branch=v3.13)查找。
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories \
-    && apk add --update --no-cache openjdk8-jre-base redis \
+    && apk add --update --no-cache openjdk8-jre-base \
     && rm -f /var/cache/apk/*
 
 # 指定运行时的工作目录
@@ -37,10 +37,6 @@ COPY --from=build /app/target/fluorescent-music-0.0.1-SNAPSHOT.jar .
 
 # 暴露端口
 EXPOSE 80
-
-RUN ["echo","'daemonize yes'",">>","/etc/redis.conf"]
-
-RUN ["/usr/bin/redis-server"]
 
 # 执行启动命令
 CMD ["java", "-jar", "/app/fluorescent-music-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=pro"]
