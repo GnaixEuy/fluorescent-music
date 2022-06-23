@@ -8,7 +8,6 @@ import cn.fluorescent.fluorescentmusic.entity.PlayList;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.PlayListService;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -155,9 +154,6 @@ public class PlayListController {
                 Wrappers
                         .<PlayList>lambdaQuery()
                         .eq(PlayList::getType, type));
-        if (CollectionUtil.isEmpty(list)) {
-            throw new BizException(ExceptionType.PLAYLIST_NOT_FOUND);
-        }
         return ResponseResult.success(list);
     }
 

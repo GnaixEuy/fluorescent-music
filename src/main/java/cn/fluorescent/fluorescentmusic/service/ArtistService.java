@@ -12,4 +12,6 @@ public interface ArtistService extends IService<Artist> {
 
     boolean savaArtist(Artist artist);
 
+    Artist findArtistByUserId(String userId);
+
 }

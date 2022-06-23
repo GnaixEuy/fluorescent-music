@@ -9,6 +9,7 @@ import cn.fluorescent.fluorescentmusic.entity.Music;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.FileMapper;
 import cn.fluorescent.fluorescentmusic.mapper.MusicMapper;
+import cn.fluorescent.fluorescentmusic.service.ArtistService;
 import cn.fluorescent.fluorescentmusic.service.FileService;
 import cn.fluorescent.fluorescentmusic.service.MusicService;
 import cn.fluorescent.fluorescentmusic.vo.MusicVo;
@@ -47,6 +48,7 @@ import java.util.List;
 public class MusicController {
 
     private MusicService musicService;
+    private ArtistService artistService;
 
     private MusicMapper musicMapper;
 
@@ -64,6 +66,7 @@ public class MusicController {
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
         boolean result = this.musicService.save(music);
+//TODO music 创建时和音乐人绑定
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
         }
@@ -254,6 +257,11 @@ public class MusicController {
     @Autowired
     public void setMusicService(MusicService musicService) {
         this.musicService = musicService;
+    }
+
+    @Autowired
+    public void setArtistService(ArtistService artistService) {
+        this.artistService = artistService;
     }
 
     @Autowired

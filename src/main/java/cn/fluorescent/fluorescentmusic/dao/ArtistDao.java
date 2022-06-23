@@ -18,4 +18,6 @@ public interface ArtistDao extends BaseMapper<Artist> {
 
     int registeredArtist(Artist artist);
 
+    Artist findOneByCreatedBy(String id);
+
 }
