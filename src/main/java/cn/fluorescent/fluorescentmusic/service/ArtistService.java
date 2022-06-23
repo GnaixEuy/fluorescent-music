@@ -4,11 +4,12 @@ import cn.fluorescent.fluorescentmusic.dto.file.FileDto;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicDto;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
+import cn.fluorescent.fluorescentmusic.entity.Artist;
 import cn.fluorescent.fluorescentmusic.entity.Music;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
-public interface ArtistService extends IService<Music> {
+public interface ArtistService extends IService<Artist> {
     public abstract MusicDto putMusic(MusicCreateRequest musicCreateRequest);
 
     public abstract MusicDto updateMusic(String id,MusicUpdateRequest musicUpdateRequest);

@@ -86,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**")
                 .antMatchers("/v3/**")
                 .antMatchers("/doc.html")
-//                .antMatchers("/**")
+                .antMatchers("/**")
                 .antMatchers("/weixin/**");
     }
 }
