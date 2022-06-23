@@ -136,6 +136,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (userUpdateRequest.getEnabled() != null) {
             user.setEnabled(userUpdateRequest.getEnabled());
         }
+        if (userUpdateRequest.getPassword() != null) {
+            user.setPassword(this.passwordEncoder.encode(userUpdateRequest.getPassword()));
+        }
         final boolean success = this.userDao.updateById(user) == 1;
         if (success) {
             return this.userMapper.toDto(user);

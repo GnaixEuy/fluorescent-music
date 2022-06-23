@@ -146,6 +146,14 @@ public class ArtistController {
         return ResponseResult.success("歌手信息更新成功");
     }
 
+
+    //TODO
+    @GetMapping(value = {"/gender/{gender}"})
+    public ResponseResult<String> gender(@PathVariable String gender) {
+
+        return null;
+    }
+
     @Autowired
     public void setArtistService(ArtistService artistService) {
         this.artistService = artistService;
