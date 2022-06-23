@@ -135,7 +135,7 @@ public class MusicController {
 
     @GetMapping("/search")
     @ApiOperation(value = "音乐分页接口，按照需要的数量获取定量音乐数据")
-    public ResponseResult<Page<MusicVo>> search(@RequestBody(required = false) Page searchFilter) {
+    public ResponseResult<Page<MusicVo>> search(Page searchFilter) {
         Page page = this.musicService.page(searchFilter);
         List records = page.getRecords();
         List<MusicVo> musicVos = this.musicList2MusicVoList(records);
@@ -181,8 +181,12 @@ public class MusicController {
     @DeleteMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id删除对应音乐")
     //    @RolesAllowed(value = {"ROLE_ADMIN"})
+    @Transactional
     @CacheEvict(cacheNames = {"musicListCache", "musicListByType"}, allEntries = true)
     public ResponseResult<String> delete(@PathVariable String id) {
+        this.artistMusicService.remove(Wrappers
+                .<ArtistMusic>lambdaQuery()
+                .eq(ArtistMusic::getMusicId, id));
         boolean b = this.musicService.removeById(id);
         if (!b) {
             throw new BizException(ExceptionType.MUSIC_NOT_FOUND);
