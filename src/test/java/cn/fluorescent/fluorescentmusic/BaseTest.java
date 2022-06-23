@@ -2,7 +2,6 @@ package cn.fluorescent.fluorescentmusic;
 
 import cn.fluorescent.fluorescentmusic.dao.UserDao;
 import cn.fluorescent.fluorescentmusic.dto.user.UserCreateRequest;
-import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.mapper.UserMapper;
 import cn.fluorescent.fluorescentmusic.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,8 +35,8 @@ public abstract class BaseTest {
         userCreateRequest.setUsername("GnaixEuyTest111");
         userCreateRequest.setNickname("GnaixEuyTest111");
         userCreateRequest.setPassword("dddddd");
-        userCreateRequest.setGender(Gender.MALE);
-        this.userDao.insert(userMapper.createEntity(userCreateRequest));
+//        userCreateRequest.setGender(Gender.MALE);
+//        this.userDao.insert(userMapper.createEntity(userCreateRequest));
     }
 
 }

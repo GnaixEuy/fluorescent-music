@@ -36,6 +36,10 @@ public class UserDto {
 
     private Date lastLoginTime;
 
+    private Date createdTime;
+
+    private Date updatedTime;
+
     private String avatarUrl;
 
 }
