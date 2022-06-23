@@ -4,14 +4,14 @@ import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
 import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.enmus.MusicStatus;
+import cn.fluorescent.fluorescentmusic.entity.Artist;
+import cn.fluorescent.fluorescentmusic.entity.ArtistMusic;
 import cn.fluorescent.fluorescentmusic.entity.File;
 import cn.fluorescent.fluorescentmusic.entity.Music;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.mapper.FileMapper;
 import cn.fluorescent.fluorescentmusic.mapper.MusicMapper;
-import cn.fluorescent.fluorescentmusic.service.ArtistService;
-import cn.fluorescent.fluorescentmusic.service.FileService;
-import cn.fluorescent.fluorescentmusic.service.MusicService;
+import cn.fluorescent.fluorescentmusic.service.*;
 import cn.fluorescent.fluorescentmusic.vo.MusicVo;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import cn.fluorescent.fluorescentmusic.vo.file.FileVo;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,9 @@ public class MusicController {
 
     private MusicService musicService;
     private ArtistService artistService;
+    private ArtistMusicService artistMusicService;
+
+    private UserService userService;
 
     private MusicMapper musicMapper;
 
@@ -62,11 +66,11 @@ public class MusicController {
     @PostMapping(value = {""})
     @ApiOperation(value = "增加音乐接口")
     @Transactional
+    @RolesAllowed(value = {"ROLE_ARTIST"})
     @CacheEvict(cacheNames = {"musicListCache", "musicListByType"}, allEntries = true)
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
         boolean result = this.musicService.save(music);
-//TODO music 创建时和音乐人绑定
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
         }
@@ -78,6 +82,10 @@ public class MusicController {
         File byId = this.fileService.getById(music.getFileId());
         FileVo fileVo = this.fileMapper.toVo(byId);
         this.music2MusicVo(music, musicVo, byId, fileVo);
+        Artist artistByUserId = this.artistService.findArtistByUserId(this.userService.getCurrentUser().getId());
+        if (!this.artistMusicService.save(new ArtistMusic(artistByUserId.getId(), musicVo.getId()))) {
+            throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
+        }
         return ResponseResult.success(musicVo);
     }
 
@@ -262,6 +270,16 @@ public class MusicController {
     @Autowired
     public void setArtistService(ArtistService artistService) {
         this.artistService = artistService;
+    }
+
+    @Autowired
+    public void setArtistMusicService(ArtistMusicService artistMusicService) {
+        this.artistMusicService = artistMusicService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Autowired

@@ -171,7 +171,6 @@ public class ArtistController {
         );
         List<Artist> resultList = new ArrayList<>(list.size());
         for (User user : list) {
-            System.out.println(user);
             artist = this.artistService.findArtistByUserId(user.getId());
             if (artist != null) {
                 resultList.add(artist);

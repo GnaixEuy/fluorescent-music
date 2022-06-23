@@ -37,9 +37,10 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistDao, Artist> implements
     @Override
     public Artist findArtistByUserId(String userId) {
         Artist oneByCreatedBy = this.artistDao.findOneByCreatedBy(userId);
-        Artist byId = this.getById(oneByCreatedBy.getId());
-        System.out.println(byId);
-        return byId;
+        if (oneByCreatedBy == null) {
+            return null;
+        }
+        return this.getById(oneByCreatedBy.getId());
     }
 
     @Autowired
