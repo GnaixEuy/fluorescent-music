@@ -1,37 +1,48 @@
 package cn.fluorescent.fluorescentmusic.service.impl;
 
-import cn.fluorescent.fluorescentmusic.dao.ArtistDao;
-import cn.fluorescent.fluorescentmusic.entity.Artist;
+import cn.fluorescent.fluorescentmusic.dao.MusicDao;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicDto;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
+import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
+import cn.fluorescent.fluorescentmusic.entity.Music;
+import cn.fluorescent.fluorescentmusic.exception.BizException;
+import cn.fluorescent.fluorescentmusic.mapper.MusicMapper;
 import cn.fluorescent.fluorescentmusic.service.ArtistService;
+import cn.fluorescent.fluorescentmusic.service.MusicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * <img src="http://blog.gnaixeuy.cn/wp-content/uploads/2022/06/bug.png"/>
- *
- * <p>项目： fluorescent-music </p>
- *
- * @author GnaixEuy
- * @date 2022/6/21
- * @see <a href="https://github.com/GnaixEuy"> GnaixEuy的GitHub </a>
- */
 @Service
-public class ArtistServiceImpl extends ServiceImpl<ArtistDao, Artist> implements ArtistService {
+public class ArtistServiceImpl extends ServiceImpl<MusicDao,Music> implements ArtistService {
+    private MusicService musicService;
 
-    private ArtistDao artistDao;
+    private MusicDao musicDao;
 
-    /**
-     * @param artist
-     * @return
-     */
+    private MusicMapper musicMapper;
+
+
     @Override
-    public boolean savaArtist(Artist artist) {
-        return this.artistDao.registeredArtist(artist) == 1;
+    public MusicDto putMusic(MusicCreateRequest musicCreateRequest) {
+        try {
+            MusicDto musicDto = musicService.create(musicCreateRequest);
+            return musicDto;
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
-    @Autowired
-    public void setArtistDao(ArtistDao artistDao) {
-        this.artistDao = artistDao;
+    @Override
+    public MusicDto updateMusic(String id, MusicUpdateRequest musicUpdateRequest) {
+
+        Music oldMusic = this.musicDao.selectById(id);
+        Music newMusic = this.musicMapper.updateEntity(oldMusic, this.musicMapper.toDto(musicUpdateRequest));
+        final int result = this.musicDao.updateById(newMusic);
+        if (result == 1) {
+            final Music resultMusic = this.musicDao.selectById(id);
+            return this.musicMapper.toDto(resultMusic);
+        }
+        throw new BizException(ExceptionType.MUSIC_UPDATE_ERROR);
     }
 }

@@ -1,15 +1,15 @@
 package cn.fluorescent.fluorescentmusic.service;
 
-import cn.fluorescent.fluorescentmusic.entity.Artist;
+import cn.fluorescent.fluorescentmusic.dto.file.FileDto;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicCreateRequest;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicDto;
+import cn.fluorescent.fluorescentmusic.dto.music.MusicUpdateRequest;
+import cn.fluorescent.fluorescentmusic.entity.Music;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-/**
- * @author gnaixeuy
- * @description 针对表【artist(歌手表)】的数据库操作Service
- * @createDate 2022-06-20 22:27:00
- */
-public interface ArtistService extends IService<Artist> {
 
-    boolean savaArtist(Artist artist);
+public interface ArtistService extends IService<Music> {
+    public abstract MusicDto putMusic(MusicCreateRequest musicCreateRequest);
 
+    public abstract MusicDto updateMusic(String id,MusicUpdateRequest musicUpdateRequest);
 }
