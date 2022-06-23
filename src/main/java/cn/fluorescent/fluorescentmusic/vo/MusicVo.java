@@ -34,5 +34,6 @@ public class MusicVo extends BaseVo implements Serializable {
 
     private FileVo musicFile;
 
+
 }
 

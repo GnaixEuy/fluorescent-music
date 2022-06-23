@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fluorescent.fluorescentmusic.dao.AlbumDao">
+    <resultMap id="albumResultMap" type="cn.fluorescent.fluorescentmusic.entity.Album">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="cover_url" property="album_url"/>
+    </resultMap>
+    <select id="findAlbumNameById" resultMap="albumResultMap">
+        select name
+        FROM album
+        WHERE id = #{id}
+    </select>
+    <select id="findDescriptionById" resultMap="albumResultMap">
+        select description
+        FROM album
+        WHERE id = #{id}
+    </select>
+    <select id="findUrlById" resultMap="albumResultMap">
+        select cover_url
+        FROM album
+        WHERE id = #{id}
+    </select>
+    <select id="findNickNameBuId" resultMap="cn.fluorescent.fluorescentmusic.dao.UserDao.userResultMap">
+        select nickname
+        FROM `user`
+        WHERE id IN (SELECT album_id AS id FROM `album` WHERE `album`.id = #{id})
+    </select>
+    <select id="findMusicInfo" resultMap="cn.fluorescent.fluorescentmusic.dao.MusicDao.musicResultMap">
+        select name, file_id
+        FROM music
+                 INNER JOIN `album_music` AS am
+        WHERE id = am.music_id
+    </select>
+    <select id="findMusicList" resultMap="cn.fluorescent.fluorescentmusic.dao.AlbumDao.albumResultMap">
+        SELECT *
+        FROM music
+        WHERE id IN (SELECT music_id as id
+                     FROM album_music
+                              INNER JOIN `album` ON `album`.id = album_music.album_id AND `album`.id = #{id})
+    </select>
+    <select id="findAlbumInfoById" resultMap="cn.fluorescent.fluorescentmusic.dao.AlbumDao.albumResultMap">
+        select name,
+               description,
+               cover_url,
+               status,
+               created_by_user_id,
+               updated_by_user_id
+        from album
+        where id = #{id}
+    </select>
+    <select id="findAlbumArtistNameById" resultType="string">
+        select artist.`name`
+        from album_artist
+                 inner join artist
+        where album_artist.`artist_id` = artist.`id`
+          and album_artist.`artist_id` = #{id}
+    </select>
+    <insert id="addAlbum">
+        INSERT INTO `album` (id, name, description, cover_url, status, created_by_user_id, updated_by_user_id,
+                             created_time,
+                             updated_time)
+        VALUES (#{id}, #{name}, #{description}, #{album_url}, #{status}, #{creator.id}, #{creator.id},
+                #{createdTime},
+                #{updatedTime})
+    </insert>
+    <insert id="addAlbumArtist">
+        INSERT INTO `album_artist` (album_id, artist_id)
+        VALUES (#{album_id}, #{artist_id})
+    </insert>
+    <insert id="addAlbumMusic">
+        INSERT INTO `album_music` (album_id, music_id)
+        VALUES (#{album_id}, #{music_id})
+    </insert>
+    <update id="updateAlbum">
+        update `album`
+        SET id                 = #{id},
+            name               = #{name},
+            description        = #{description},
+            cover_url          = #{album_url},
+            created_by_user_id = #{creator.id},
+            updated_by_user_id = #{creator.id},
+            created_time       = #{createdTime},
+            updated_time       = #{updatedTime},
+            status             = #{status}
+        WHERE id = #{id}
+    </update>
+    <select id="getArtistById" resultType="int">
+        select artist_id
+        from album_artist
+        where album_id = #{id}
+    </select>
+</mapper>
