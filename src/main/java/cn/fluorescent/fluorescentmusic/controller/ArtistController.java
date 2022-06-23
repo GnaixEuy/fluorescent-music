@@ -1,7 +1,9 @@
 package cn.fluorescent.fluorescentmusic.controller;
 
 import cn.fluorescent.fluorescentmusic.dto.ArtistUpdateRequest;
+import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
+import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.enmus.GeneralStatus;
 import cn.fluorescent.fluorescentmusic.entity.Artist;
 import cn.fluorescent.fluorescentmusic.entity.User;
@@ -22,6 +24,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +60,7 @@ public class ArtistController {
 
     @PostMapping(value = {"/{id}"})
     @Transactional
-    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "注册音乐人接口，传入用户id和音乐人描述remark，可升级用户身份至音乐人")
     public ResponseResult<String> register(@PathVariable String id, @RequestBody String remark) {
         UserRole isRepeat = this.userRoleService.getOne(Wrappers
@@ -88,7 +91,7 @@ public class ArtistController {
 
     @DeleteMapping(value = {"/{id}"})
     @Transactional
-    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "通过音乐人id 取消音乐人资格")
     public ResponseResult<String> delete(@PathVariable String id) {
         Artist artist = this.artistService.getById(id);
@@ -108,7 +111,7 @@ public class ArtistController {
     }
 
     @PutMapping(value = {"/{id}"})
-    @CacheEvict(cacheNames = {"artistListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "通过歌手id 进行信息更新")
     public ResponseResult<String> update(@PathVariable String id,
                                          @RequestBody ArtistUpdateRequest artistUpdateRequest) {
@@ -146,13 +149,48 @@ public class ArtistController {
         return ResponseResult.success("歌手信息更新成功");
     }
 
-
-    //TODO
     @GetMapping(value = {"/gender/{gender}"})
-    public ResponseResult<String> gender(@PathVariable String gender) {
-
-        return null;
+    @ApiOperation(value = "通过音乐人性别获取音乐人信息")
+    @Cacheable(value = {"artistGenderListCache"})
+    public ResponseResult<List<Artist>> gender(@PathVariable String gender) {
+        Gender genderTranslator;
+        switch (gender) {
+            case "男":
+                genderTranslator = Gender.MALE;
+                break;
+            case "女":
+                genderTranslator = Gender.FEMALE;
+                break;
+            default:
+                genderTranslator = Gender.UNKNOWN;
+        }
+        Artist artist;
+        List<User> list = this.userService.list(
+                Wrappers.<User>lambdaQuery()
+                        .eq(User::getGender, genderTranslator)
+        );
+        List<Artist> resultList = new ArrayList<>(list.size());
+        for (User user : list) {
+            System.out.println(user);
+            artist = this.artistService.findArtistByUserId(user.getId());
+            if (artist != null) {
+                resultList.add(artist);
+            }
+        }
+        return ResponseResult.success(resultList);
     }
+
+    @GetMapping(value = {"/me"})
+    @ApiOperation(value = "获取本身音乐人信息，如果不是音乐人返回异常")
+    public ResponseResult<Artist> me() {
+        UserDto currentUser = this.userService.getCurrentUser();
+        Artist artistByUserId = this.artistService.findArtistByUserId(currentUser.getId());
+        if (artistByUserId == null) {
+            throw new BizException(ExceptionType.ARTIST_NOT_FOUND);
+        }
+        return ResponseResult.success(artistByUserId);
+    }
+
 
     @Autowired
     public void setArtistService(ArtistService artistService) {

@@ -1,9 +1,7 @@
 package cn.fluorescent.fluorescentmusic.service.impl;
 
 import cn.fluorescent.fluorescentmusic.dao.ArtistDao;
-import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.entity.Artist;
-import cn.fluorescent.fluorescentmusic.exception.BizException;
 import cn.fluorescent.fluorescentmusic.service.ArtistService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +37,9 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistDao, Artist> implements
     @Override
     public Artist findArtistByUserId(String userId) {
         Artist oneByCreatedBy = this.artistDao.findOneByCreatedBy(userId);
-        if (oneByCreatedBy == null) {
-            throw new BizException(ExceptionType.ARTIST_NOT_FOUND);
-        }
-        return oneByCreatedBy;
+        Artist byId = this.getById(oneByCreatedBy.getId());
+        System.out.println(byId);
+        return byId;
     }
 
     @Autowired

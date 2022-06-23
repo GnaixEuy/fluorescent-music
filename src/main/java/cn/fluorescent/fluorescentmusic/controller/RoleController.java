@@ -41,7 +41,7 @@ public class RoleController {
     }
 
     @PostMapping(value = {"/"})
-    @CacheEvict(cacheNames = {"roleListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"roleListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "添加角色信息")
     public ResponseResult<String> create(Role role) {
         boolean save = this.roleService.save(role);
@@ -52,12 +52,12 @@ public class RoleController {
     }
 
     @PostMapping(value = {"/{title}"})
-    @CacheEvict(cacheNames = {"roleListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"roleListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "通过名称删除角色信息，有用户使用该角色信息的时候删除会出现异常")
     public ResponseResult<String> delete(@PathVariable String title) {
         boolean remove = this.roleService.remove(Wrappers.<Role>lambdaQuery().eq(Role::getName, title));
         if (!remove) {
-            throw new BizException(ExceptionType.USER_DELETE_ERROR);
+            throw new BizException(ExceptionType.ROLE_DELETE_ERROR);
         }
         return ResponseResult.success("删除角色信息成功");
     }

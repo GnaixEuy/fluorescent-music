@@ -126,7 +126,6 @@ public class UserController {
     @ApiOperation(value = "通过请求头保存的token，获取当前用户的信息", httpMethod = "GET")
     public UserVo me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
         return this.userMapper.toVo(this.userService.getCurrentUser());
     }
 
