@@ -31,5 +31,7 @@ public class MusicCreateRequest {
 
     private String fileId;
 
+    private String status;
+
 
 }

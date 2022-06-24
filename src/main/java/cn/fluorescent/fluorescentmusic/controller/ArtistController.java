@@ -5,13 +5,9 @@ import cn.fluorescent.fluorescentmusic.dto.user.UserDto;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.enmus.Gender;
 import cn.fluorescent.fluorescentmusic.enmus.GeneralStatus;
-import cn.fluorescent.fluorescentmusic.entity.Artist;
-import cn.fluorescent.fluorescentmusic.entity.User;
-import cn.fluorescent.fluorescentmusic.entity.UserRole;
+import cn.fluorescent.fluorescentmusic.entity.*;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
-import cn.fluorescent.fluorescentmusic.service.ArtistService;
-import cn.fluorescent.fluorescentmusic.service.UserRoleService;
-import cn.fluorescent.fluorescentmusic.service.UserService;
+import cn.fluorescent.fluorescentmusic.service.*;
 import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -45,6 +41,10 @@ public class ArtistController {
     private UserService userService;
     private UserRoleService userRoleService;
 
+    private ArtistMusicService artistMusicService;
+
+    private MusicService musicService;
+
     @GetMapping(value = {"/"})
     @Cacheable(value = {"artistListCache"})
     @ApiOperation(value = "获取所有音乐人信息接口")
@@ -57,6 +57,21 @@ public class ArtistController {
     public ResponseResult<Page<Artist>> search(Page<Artist> page) {
         return ResponseResult.success(this.artistService.page(page));
     }
+
+    @GetMapping(value = {"/musicListByArtistId/{id}"})
+    @Cacheable(value = "MusicListByArtistId", key = "#id")
+    @ApiOperation(value = "传入音乐人id 获取该音乐人的所有音乐信息")
+    public ResponseResult<List<Music>> listByArtistId(@PathVariable String id) {
+        List<ArtistMusic> artistMusicList = this.artistMusicService.list(Wrappers
+                .<ArtistMusic>lambdaQuery()
+                .eq(ArtistMusic::getArtistId, id));
+        List<Music> list = new ArrayList<>(artistMusicList.size());
+        for (ArtistMusic artistMusic : artistMusicList) {
+            list.add(this.musicService.getById(artistMusic.getMusicId()));
+        }
+        return ResponseResult.success(list);
+    }
+
 
     @PostMapping(value = {"/{id}"})
     @Transactional
@@ -91,7 +106,7 @@ public class ArtistController {
 
     @DeleteMapping(value = {"/{id}"})
     @Transactional
-    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache", "MusicListByArtistId"}, allEntries = true)
     @ApiOperation(value = "通过音乐人id 取消音乐人资格")
     public ResponseResult<String> delete(@PathVariable String id) {
         Artist artist = this.artistService.getById(id);
@@ -204,5 +219,15 @@ public class ArtistController {
     @Autowired
     public void setUserRoleService(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
+    }
+
+    @Autowired
+    public void setArtistMusicService(ArtistMusicService artistMusicService) {
+        this.artistMusicService = artistMusicService;
+    }
+
+    @Autowired
+    public void setMusicService(MusicService musicService) {
+        this.musicService = musicService;
     }
 }

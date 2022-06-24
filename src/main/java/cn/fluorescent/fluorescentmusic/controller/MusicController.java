@@ -66,10 +66,11 @@ public class MusicController {
     @PostMapping(value = {""})
     @ApiOperation(value = "增加音乐接口")
     @Transactional
-    @RolesAllowed(value = {"ROLE_ARTIST"})
-    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache"}, allEntries = true)
+    @RolesAllowed(value = {"ROLE_ARTIST", "ROLE_ADMIN"})
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache", "MusicListByArtistId"}, allEntries = true)
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
+        musicStatusTranslator(music, musicCreateRequest.getStatus());
         boolean result = this.musicService.save(music);
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
@@ -89,6 +90,7 @@ public class MusicController {
         return ResponseResult.success(musicVo);
     }
 
+
     @GetMapping(value = {"/{id}"})
     @ApiOperation(value = "通过id获取音乐详细信息")
     public ResponseResult<MusicVo> musicById(@PathVariable String id) {
@@ -103,15 +105,15 @@ public class MusicController {
         return ResponseResult.success(musicVo);
     }
 
-    @GetMapping(value = {"/status/"})
+    @GetMapping(value = {"/status/{status}"})
     @ApiOperation(value = "获取发布的music信息,发行,下架,草稿")
-    public ResponseResult<Page<MusicVo>> musicByStatus(Page page, String status) {
+    public ResponseResult<Page<MusicVo>> musicByStatus(Page page, @PathVariable String status) {
         MusicStatus getStatus;
         switch (status) {
-            case "发行":
+            case "2":
                 getStatus = MusicStatus.PUBLISH;
                 break;
-            case "下架":
+            case "3":
                 getStatus = MusicStatus.CLOSED;
                 break;
             default:
@@ -182,7 +184,7 @@ public class MusicController {
     @ApiOperation(value = "根据id删除对应音乐")
     @RolesAllowed(value = {"ROLE_ADMIN", "ROLE_ARTIST"})
     @Transactional
-    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache", "MusicListByArtistId"}, allEntries = true)
     public ResponseResult<String> delete(@PathVariable String id) {
         this.artistMusicService.remove(Wrappers
                 .<ArtistMusic>lambdaQuery()
@@ -197,7 +199,7 @@ public class MusicController {
     @PutMapping(value = {"/{id}"})
     @ApiOperation(value = "根据id修改音乐信息状态等")
     @RolesAllowed(value = {"ROLE_ADMIN", "ROLE_ARTIST"})
-    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache", "MusicListByArtistId"}, allEntries = true)
     public ResponseResult<String> update(@Validated @RequestBody MusicUpdateRequest musicUpdateRequest, @PathVariable String id) {
         Music byId = this.musicService.getById(id);
         if (ObjectUtil.isNull(byId)) {
@@ -212,18 +214,7 @@ public class MusicController {
         if (StrUtil.isNotEmpty(newType)) {
             byId.setType(newType);
         }
-        MusicStatus musicStatus;
-        switch (musicUpdateRequest.getStatus()) {
-            case "2":
-                musicStatus = MusicStatus.PUBLISH;
-                break;
-            case "3":
-                musicStatus = MusicStatus.CLOSED;
-                break;
-            default:
-                musicStatus = MusicStatus.DRAFT;
-        }
-        byId.setStatus(musicStatus);
+        musicStatusTranslator(byId, musicUpdateRequest.getStatus());
         boolean success = this.musicService.updateById(byId);
         if (!success) {
             throw new BizException(ExceptionType.MUSIC_UPDATE_ERROR);
@@ -264,6 +255,21 @@ public class MusicController {
         return resultList;
     }
 
+
+    private void musicStatusTranslator(Music music, String status) {
+        MusicStatus musicStatus;
+        switch (status) {
+            case "2":
+                musicStatus = MusicStatus.PUBLISH;
+                break;
+            case "3":
+                musicStatus = MusicStatus.CLOSED;
+                break;
+            default:
+                musicStatus = MusicStatus.DRAFT;
+        }
+        music.setStatus(musicStatus);
+    }
 
     @Autowired
     public void setMusicService(MusicService musicService) {
