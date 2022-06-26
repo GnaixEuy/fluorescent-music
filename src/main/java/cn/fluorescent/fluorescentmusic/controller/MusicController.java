@@ -70,7 +70,10 @@ public class MusicController {
     @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache", "MusicListByArtistId"}, allEntries = true)
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
         Music music = this.musicMapper.toEntity(musicCreateRequest);
-        musicStatusTranslator(music, musicCreateRequest.getStatus());
+        String status = musicCreateRequest.getStatus();
+        if (status != null) {
+            musicStatusTranslator(music, status);
+        }
         boolean result = this.musicService.save(music);
         if (!result || ObjectUtil.isAllEmpty(music)) {
             throw new BizException(ExceptionType.MUSIC_INSERT_ERROR);
