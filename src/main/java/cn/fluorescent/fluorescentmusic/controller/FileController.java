@@ -17,15 +17,14 @@ import cn.fluorescent.fluorescentmusic.vo.ResponseResult;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.omg.CORBA.SystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -114,6 +113,18 @@ public class FileController {
         HashMap<String, Object> data = upload.getData();
         data.put("fileId", fileNameUUID);
         return upload;
+    }
+
+
+    @GetMapping(value = {"/{id}"})
+    @ApiOperation(value = "通过file id 获取file详情信息")
+    @Cacheable(value = {"fileById"}, key = "#id")
+    public ResponseResult fileById(@PathVariable String id) {
+        cn.fluorescent.fluorescentmusic.entity.File byId = this.fileService.getById(id);
+        if (byId == null) {
+            throw new BizException(ExceptionType.FILE_NOT_FOUND);
+        }
+        return ResponseResult.success(byId);
     }
 
     @Autowired
