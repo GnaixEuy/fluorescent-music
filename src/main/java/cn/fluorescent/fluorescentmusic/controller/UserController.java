@@ -136,6 +136,15 @@ public class UserController {
         return ResponseResult.success("绑定成功");
     }
 
+    @GetMapping(value = {"/unbind/{id}/{roleId}"})
+    @ApiOperation(value = "传入用户id角色id，和角色姓名进行解绑")
+    public ResponseResult<String> unBindRole(@PathVariable String id, @PathVariable String roleId) {
+        this.userRoleService.remove(Wrappers
+                .<UserRole>lambdaQuery()
+                .eq(UserRole::getUserId, id)
+                .eq(UserRole::getRoleId, roleId));
+        return ResponseResult.success("解绑成功");
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
