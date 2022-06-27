@@ -69,7 +69,12 @@ public class MusicController {
     @RolesAllowed(value = {"ROLE_ARTIST", "ROLE_ADMIN"})
     @CacheEvict(cacheNames = {"musicListCache", "musicListByType", "artistListCache", "artistGenderListCache", "playListCache", "playListByTypeCache", "MusicListByArtistId"}, allEntries = true)
     public ResponseResult<MusicVo> insert(@Validated @RequestBody MusicCreateRequest musicCreateRequest) {
-        Music music = this.musicMapper.toEntity(musicCreateRequest);
+        Music music = new Music();
+        music.setName(musicCreateRequest.getName());
+        music.setType(musicCreateRequest.getType());
+        music.setDescription(musicCreateRequest.getDescription());
+        music.setImageUrl(musicCreateRequest.getImageUrl());
+        music.setFileId(musicCreateRequest.getFileId());
         String status = musicCreateRequest.getStatus();
         if (status != null) {
             musicStatusTranslator(music, status);

@@ -7,7 +7,6 @@ import cn.fluorescent.fluorescentmusic.dao.UserRoleDao;
 import cn.fluorescent.fluorescentmusic.dto.user.*;
 import cn.fluorescent.fluorescentmusic.enmus.ExceptionType;
 import cn.fluorescent.fluorescentmusic.enmus.Gender;
-import cn.fluorescent.fluorescentmusic.entity.Role;
 import cn.fluorescent.fluorescentmusic.entity.User;
 import cn.fluorescent.fluorescentmusic.entity.UserRole;
 import cn.fluorescent.fluorescentmusic.exception.BizException;
@@ -23,6 +22,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -278,12 +278,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = {"userListCache"}, allEntries = true)
     public boolean bindRole(String id, String title) {
-        Role role = this.roleDao.selectOne(Wrappers
-                .<Role>lambdaQuery()
-                .select(Role::getId)
-                .eq(Role::getTitle, title));
-        int insert = this.userRoleDao.insert(new UserRole(id, role.getId()));
+        int insert = this.userRoleDao.insert(new UserRole(id, title));
         if (insert != 1) {
             throw new BizException(ExceptionType.USER_ROLE_BIND_ERROR);
         }
@@ -324,6 +321,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
+
 
     @Autowired
     public void setRoleDao(RoleDao roleDao) {
