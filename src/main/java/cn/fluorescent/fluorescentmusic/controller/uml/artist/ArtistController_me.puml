@@ -1,0 +1,32 @@
+@startuml
+participant Actor
+Actor -> ArtistController : me
+activate ArtistController
+ArtistController -> ArtistService : findArtistByUserId
+activate ArtistService
+ArtistService -> ArtistServiceImpl : findArtistByUserId
+activate ArtistServiceImpl
+ArtistServiceImpl -> ArtistDao : findOneByCreatedBy
+activate ArtistDao
+ArtistDao --> ArtistServiceImpl
+deactivate ArtistDao
+ArtistServiceImpl --> ArtistService
+deactivate ArtistServiceImpl
+ArtistService --> ArtistController
+deactivate ArtistService
+create BizException
+ArtistController -> BizException : new
+activate BizException
+BizException --> ArtistController
+deactivate BizException
+ArtistController -> ResponseResult : success
+activate ResponseResult
+create ResponseResult
+ResponseResult -> ResponseResult : new
+activate ResponseResult
+ResponseResult --> ResponseResult
+deactivate ResponseResult
+ResponseResult --> ArtistController
+deactivate ResponseResult
+return
+@enduml

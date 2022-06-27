@@ -1,0 +1,15 @@
+@startuml
+participant Actor
+Actor -> ArtistController : listByArtistId
+activate ArtistController
+ArtistController -> ResponseResult : success
+activate ResponseResult
+create ResponseResult
+ResponseResult -> ResponseResult : new
+activate ResponseResult
+ResponseResult --> ResponseResult
+deactivate ResponseResult
+ResponseResult --> ArtistController
+deactivate ResponseResult
+return
+@enduml

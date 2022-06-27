@@ -151,6 +151,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     @Override
     public void delete(String id) {
+        this.userRoleDao.delete(Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, id));
         this.userDao.deleteById(getById(id));
     }
 

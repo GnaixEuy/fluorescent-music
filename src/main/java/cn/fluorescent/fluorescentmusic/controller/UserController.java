@@ -129,10 +129,10 @@ public class UserController {
         return this.userMapper.toVo(this.userService.getCurrentUser());
     }
 
-    @GetMapping(value = {"/bind/{id}/{title}"})
+    @GetMapping(value = {"/bind/{id}/{roleId}"})
     @ApiOperation(value = "传入用户id，和角色姓名进行绑定")
-    public ResponseResult<String> bindRole(@PathVariable String id, @PathVariable String title) {
-        this.userService.bindRole(id, title);
+    public ResponseResult<String> bindRole(@PathVariable String id, @PathVariable String roleId) {
+        this.userService.bindRole(id, roleId);
         return ResponseResult.success("绑定成功");
     }
 
