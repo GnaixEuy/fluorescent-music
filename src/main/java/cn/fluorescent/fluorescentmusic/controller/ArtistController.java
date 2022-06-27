@@ -75,7 +75,7 @@ public class ArtistController {
 
     @PostMapping(value = {"/{id}"})
     @Transactional
-    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache"}, allEntries = true)
+    @CacheEvict(cacheNames = {"userListCache", "userInfo", "artistListCache", "artistGenderListCache"}, allEntries = true)
     @ApiOperation(value = "注册音乐人接口，传入用户id和音乐人描述remark，可升级用户身份至音乐人")
     public ResponseResult<String> register(@PathVariable String id, @RequestBody String remark) {
         UserRole isRepeat = this.userRoleService.getOne(Wrappers
@@ -106,7 +106,7 @@ public class ArtistController {
 
     @DeleteMapping(value = {"/{id}"})
     @Transactional
-    @CacheEvict(cacheNames = {"artistListCache", "artistGenderListCache", "MusicListByArtistId"}, allEntries = true)
+    @CacheEvict(cacheNames = {"userListCache", "userInfo", "artistListCache", "artistGenderListCache", "MusicListByArtistId"}, allEntries = true)
     @ApiOperation(value = "通过音乐人id 取消音乐人资格")
     public ResponseResult<String> delete(@PathVariable String id) {
         Artist artist = this.artistService.getById(id);
